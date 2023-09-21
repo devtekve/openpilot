@@ -14,7 +14,8 @@ from openpilot.system.swaglog import cloudlog
 from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import set_realtime_priority
 from openpilot.selfdrive.modeld.constants import IDX_N
-from openpilot.selfdrive.modeld.runners import ModelRunner, Runtime
+from openpilot.selfdrive.modeld.runners import ModelRunner
+from openpilot.selfdrive.modeld.runners.runmodel_pyx import Runtime
 
 NAV_INPUT_SIZE = 256*256
 NAV_FEATURE_LEN = 256

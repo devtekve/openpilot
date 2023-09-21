@@ -278,6 +278,10 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"CustomMapbox", CLEAR_ON_MANAGER_START},
     {"OsmLocalDb", CLEAR_ON_MANAGER_START},
     {"HkgSmoothStop", CLEAR_ON_MANAGER_START},
+    {"EnforceTorqueLateral", CLEAR_ON_MANAGER_START},
+    {"OsmWayTest", CLEAR_ON_MANAGER_START},
+
+    EnforceTorqueLateral
 
 };
 
