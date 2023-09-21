@@ -7,7 +7,7 @@ import system.fleetmanager.helpers as fleet
 from openpilot.system.hardware.hw import Paths
 
 app = Flask(__name__)
-ROOT = Paths.log_root()
+REALDATA = Paths.log_root()
 
 @app.route("/")
 @app.route("/index")

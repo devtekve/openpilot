@@ -4,9 +4,11 @@ from flask import render_template, request, session
 from functools import wraps
 from pathlib import Path
 from system.hardware import PC
-from system.loggerd.config import ROOT as REALDATA
+from openpilot.system.hardware.hw import Paths
 from system.loggerd.uploader import listdir_by_creation
 from tools.lib.route import SegmentName
+
+REALDATA = Paths.log_root()
 
 
 # path to sunnypilot screen recordings and error logs
