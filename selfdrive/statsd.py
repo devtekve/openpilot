@@ -16,6 +16,7 @@ from openpilot.system.version import get_normalized_origin, get_short_branch, ge
 from openpilot.system.loggerd.config import STATS_DIR, STATS_DIR_FILE_LIMIT, STATS_SOCKET, STATS_FLUSH_TIME_S
 
 
+
 class METRIC_TYPE:
   GAUGE = 'g'
   SAMPLE = 'sa'
