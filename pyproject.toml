@@ -116,6 +116,7 @@ urllib3 = "*"
 websocket_client = "*"
 polyline = "*"
 sconscontrib = {git = "https://github.com/SCons/scons-contrib.git"}
+flask = "^2.3.3"
 
 
 [tool.poetry.group.dev.dependencies]

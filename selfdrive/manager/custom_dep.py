@@ -28,9 +28,11 @@ THIRD_PARTY_DIR_SP = '/data/third_party_community'
 PRELOADED_DEP_FILE = os.path.join(BASEDIR, "selfdrive/mapd/assets/mapd_deps.tar.xz")
 OPSPLINE_VERSION = "1.11.1"
 OVERPY_VERSION = "0.6"
+FLASK_VERSION = "2.3.3"
 SPECS = {
   'scipy': OPSPLINE_VERSION,
   'overpy': OVERPY_VERSION,
+  'flask': FLASK_VERSION,
 }
 
 
@@ -67,6 +69,8 @@ def install_dep(spinner):
     packages.append(f'scipy=={OPSPLINE_VERSION}')
   if OVERPY_SPEC is None:
     packages.append(f'overpy=={OVERPY_VERSION}')
+  if OVERPY_SPEC is None:
+    packages.append(f'flask=={FLASK_VERSION}')
 
   pip = subprocess.Popen([sys.executable, "-m", "pip", "install", "-v"] + pip_target + packages,
                           stdout=subprocess.PIPE, env=my_env)
