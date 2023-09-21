@@ -280,9 +280,6 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"HkgSmoothStop", CLEAR_ON_MANAGER_START},
     {"EnforceTorqueLateral", CLEAR_ON_MANAGER_START},
     {"OsmWayTest", CLEAR_ON_MANAGER_START},
-
-    EnforceTorqueLateral
-
 };
 
 } // namespace
