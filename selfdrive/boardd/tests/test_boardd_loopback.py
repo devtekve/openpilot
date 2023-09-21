@@ -9,9 +9,9 @@ from pprint import pprint
 
 import cereal.messaging as messaging
 from cereal import car, log
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.timeout import Timeout
-from openpilot.selfdrive.boardd.boardd import can_list_to_can_capnp
+from openpilot.selfdrive.boardd.boardd_api_impl import can_list_to_can_capnp
 from openpilot.selfdrive.car import make_can_msg
 from openpilot.system.hardware import TICI
 from openpilot.selfdrive.test.helpers import phone_only, with_processes

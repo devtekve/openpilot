@@ -6,7 +6,7 @@ from collections import defaultdict
 from typing import Any
 
 import cereal.messaging as messaging
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.spinner import Spinner
 from openpilot.system.hardware import PC
 from openpilot.selfdrive.manager.process_config import managed_processes

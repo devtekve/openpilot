@@ -1,7 +1,7 @@
 import cereal.messaging as messaging
 from common.conversions import Conversions as CV
 from opendbc.can.packer import CANPacker
-from openpilot.common.params import Params, put_bool_nonblocking
+from openpilot.common.params_pyx import Params, put_bool_nonblocking
 from openpilot.common.realtime import DT_CTRL
 from openpilot.selfdrive.car import apply_meas_steer_torque_limits
 from openpilot.selfdrive.car.chrysler import chryslercan

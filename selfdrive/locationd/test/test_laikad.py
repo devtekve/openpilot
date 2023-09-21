@@ -3,7 +3,7 @@ import os
 import time
 import unittest
 from cereal import log
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from datetime import datetime
 from unittest import mock
 

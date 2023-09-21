@@ -10,7 +10,7 @@ from functools import cmp_to_key
 
 from panda import Panda, PandaDFU, PandaProtocolMismatch, FW_PATH
 from openpilot.common.basedir import BASEDIR
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.selfdrive.boardd.set_time import set_time
 from openpilot.system.hardware import HARDWARE
 from openpilot.system.swaglog import cloudlog

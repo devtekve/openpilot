@@ -8,7 +8,7 @@ from cereal import car, log
 from openpilot.common.numpy_fast import clip
 from openpilot.common.realtime import config_realtime_process, Priority, Ratekeeper, DT_CTRL
 from openpilot.common.profiler import Profiler
-from openpilot.common.params import Params, put_nonblocking, put_bool_nonblocking
+from openpilot.common.params_pyx import Params, put_nonblocking, put_bool_nonblocking
 import cereal.messaging as messaging
 from cereal.visionipc import VisionIpcClient, VisionStreamType
 from openpilot.common.conversions import Conversions as CV
@@ -16,7 +16,7 @@ from panda import ALTERNATIVE_EXPERIENCE
 from openpilot.system.swaglog import cloudlog
 from openpilot.system.version import is_release_branch, get_short_branch
 from openpilot.selfdrive.athena.registration import is_registered_device
-from openpilot.selfdrive.boardd.boardd import can_list_to_can_capnp
+from openpilot.selfdrive.boardd.boardd_api_impl import can_list_to_can_capnp
 from openpilot.selfdrive.car.car_helpers import get_car, get_startup_event, get_one_can
 from openpilot.selfdrive.controls.lib.lane_planner import CAMERA_OFFSET
 from openpilot.selfdrive.controls.lib.drive_helpers import VCruiseHelper, get_lag_adjusted_curvature

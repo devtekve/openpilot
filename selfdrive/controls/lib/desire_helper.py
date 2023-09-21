@@ -1,7 +1,7 @@
 import numpy as np
 from cereal import log
 from openpilot.common.conversions import Conversions as CV
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import DT_MDL
 
 LaneChangeState = log.LateralPlan.LaneChangeState

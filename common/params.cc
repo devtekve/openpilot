@@ -275,6 +275,10 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"VwAccType", CLEAR_ON_MANAGER_START},
     {"HotspotOnBoot", CLEAR_ON_MANAGER_START},
     {"DriverCameraHardwareMissing", CLEAR_ON_MANAGER_START},
+    {"CustomMapbox", CLEAR_ON_MANAGER_START},
+    {"OsmLocalDb", CLEAR_ON_MANAGER_START},
+    {"HkgSmoothStop", CLEAR_ON_MANAGER_START},
+
 };
 
 } // namespace

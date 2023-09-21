@@ -3,7 +3,7 @@ import time
 import unittest
 import struct
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 import cereal.messaging as messaging
 import openpilot.system.sensord.pigeond as pd
 from openpilot.system.hardware import TICI

@@ -5,7 +5,7 @@ import cProfile
 import pprofile
 import pyprof2calltree
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.tools.lib.logreader import LogReader
 from openpilot.selfdrive.test.profiling.lib import SubMaster, PubMaster, SubSocket, ReplayDone
 from openpilot.selfdrive.test.process_replay.process_replay import CONFIGS

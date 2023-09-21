@@ -6,7 +6,7 @@ import unittest
 from typing import Callable, cast, Optional
 from unittest.mock import MagicMock
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.timeout import Timeout
 from openpilot.selfdrive.athena import athenad
 from openpilot.selfdrive.manager.helpers import write_onroad_params

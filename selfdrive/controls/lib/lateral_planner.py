@@ -3,7 +3,7 @@ import numpy as np
 from openpilot.common.conversions import Conversions as CV
 from openpilot.common.realtime import DT_MDL
 from openpilot.common.numpy_fast import interp
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.system.swaglog import cloudlog
 from openpilot.selfdrive.controls.lib.lateral_mpc_lib.lat_mpc import LateralMpc
 from openpilot.selfdrive.controls.lib.lateral_mpc_lib.lat_mpc import N as LAT_MPC_N

@@ -7,7 +7,7 @@ import numpy as np
 import cereal.messaging as messaging
 from cereal import car
 from cereal import log
-from openpilot.common.params import Params, put_nonblocking
+from openpilot.common.params_pyx import Params, put_nonblocking
 from openpilot.common.realtime import config_realtime_process, DT_MDL
 from openpilot.common.numpy_fast import clip
 from openpilot.selfdrive.car.chrysler.values import ChryslerFlagsSP

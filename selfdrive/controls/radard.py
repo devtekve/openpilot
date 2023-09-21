@@ -7,7 +7,7 @@ from typing import Optional, Dict, Any
 import capnp
 from cereal import messaging, log, car
 from openpilot.common.numpy_fast import interp
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import Ratekeeper, Priority, config_realtime_process
 from openpilot.system.swaglog import cloudlog
 

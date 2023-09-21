@@ -10,7 +10,7 @@ import subprocess
 import random
 
 from openpilot.common.basedir import BASEDIR
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 
 
 class TestUpdated(unittest.TestCase):

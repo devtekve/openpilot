@@ -127,7 +127,7 @@ def is_dirty() -> bool:
 
 
 if __name__ == "__main__":
-  from openpilot.common.params import Params
+  from openpilot.common.params_pyx import Params
 
   params = Params()
   params.put("TermsVersion", terms_version)

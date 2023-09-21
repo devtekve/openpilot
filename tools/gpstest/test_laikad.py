@@ -6,7 +6,7 @@ import unittest
 import cereal.messaging as messaging
 import openpilot.system.sensord.pigeond as pd
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.system.hardware import TICI
 from openpilot.selfdrive.manager.process_config import managed_processes
 from openpilot.selfdrive.test.helpers import with_processes

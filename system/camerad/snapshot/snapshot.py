@@ -7,7 +7,7 @@ from PIL import Image
 
 import cereal.messaging as messaging
 from cereal.visionipc import VisionIpcClient, VisionStreamType
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import DT_MDL
 from openpilot.system.hardware import PC
 from openpilot.selfdrive.controls.lib.alertmanager import set_offroad_alert

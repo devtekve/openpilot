@@ -1,6 +1,6 @@
 import numpy as np
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import DT_CTRL
 from opendbc.can.packer import CANPacker
 from openpilot.selfdrive.car.body import bodycan

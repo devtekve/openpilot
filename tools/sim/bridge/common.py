@@ -8,7 +8,7 @@ from typing import Optional
 
 import cereal.messaging as messaging
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.numpy_fast import clip
 from openpilot.common.realtime import Ratekeeper
 from openpilot.selfdrive.test.helpers import set_params_enabled

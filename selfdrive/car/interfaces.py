@@ -11,7 +11,7 @@ from openpilot.common.basedir import BASEDIR
 from openpilot.common.conversions import Conversions as CV
 from openpilot.common.kalman.simple_kalman import KF1D, get_kalman_gain
 from openpilot.common.numpy_fast import clip
-from openpilot.common.params import Params, put_nonblocking, put_bool_nonblocking
+from openpilot.common.params_pyx import Params, put_nonblocking, put_bool_nonblocking
 from openpilot.common.realtime import DT_CTRL
 from openpilot.selfdrive.car import apply_hysteresis, gen_empty_fingerprint, scale_rot_inertia, scale_tire_stiffness, STD_CARGO_KG
 from openpilot.selfdrive.controls.lib.desire_helper import LANE_CHANGE_SPEED_MIN

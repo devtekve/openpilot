@@ -33,7 +33,7 @@ from cereal.services import service_list
 from openpilot.common.api import Api
 from openpilot.common.basedir import PERSIST
 from openpilot.common.file_helpers import CallbackReader
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import set_core_affinity
 from openpilot.system.hardware import HARDWARE, PC, AGNOS
 from openpilot.system.loggerd.xattr_cache import getxattr, setxattr

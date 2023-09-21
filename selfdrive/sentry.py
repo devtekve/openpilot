@@ -3,7 +3,7 @@ import sentry_sdk
 from enum import Enum
 from sentry_sdk.integrations.threading import ThreadingIntegration
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 #from openpilot.selfdrive.athena.registration import is_registered_device
 from openpilot.system.hardware import HARDWARE, PC
 from openpilot.system.swaglog import cloudlog

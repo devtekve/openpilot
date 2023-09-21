@@ -2,7 +2,7 @@
 import sys
 
 from cereal import car
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.tools.lib.route import Route
 from openpilot.tools.lib.logreader import LogReader
 

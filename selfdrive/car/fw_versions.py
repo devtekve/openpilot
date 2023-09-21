@@ -6,7 +6,7 @@ import capnp
 
 import panda.python.uds as uds
 from cereal import car
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.selfdrive.car.ecu_addrs import get_ecu_addrs
 from openpilot.selfdrive.car.fw_query_definitions import AddrType, EcuAddrBusType
 from openpilot.selfdrive.car.interfaces import get_interface_attr

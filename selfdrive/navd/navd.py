@@ -9,7 +9,7 @@ import requests
 import cereal.messaging as messaging
 from cereal import log
 from openpilot.common.api import Api
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import Ratekeeper
 from openpilot.selfdrive.navd.helpers import (Coordinate, coordinate_from_param,
                                     distance_along_geometry, maxspeed_to_ms,

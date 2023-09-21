@@ -14,7 +14,7 @@ from cereal import car, log
 import cereal.messaging as messaging
 import openpilot.selfdrive.sentry as sentry
 from openpilot.common.basedir import BASEDIR
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.system.swaglog import cloudlog
 
 WATCHDOG_FN = "/dev/shm/wd_"

@@ -8,7 +8,7 @@ from parameterized import parameterized
 import threading
 
 from cereal import car
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.selfdrive.car.car_helpers import interfaces
 from openpilot.selfdrive.car.fingerprints import FW_VERSIONS
 from openpilot.selfdrive.car.fw_versions import FW_QUERY_CONFIGS, FUZZY_EXCLUDE_ECUS, VERSIONS, build_fw_dict, \

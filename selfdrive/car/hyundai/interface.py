@@ -1,7 +1,7 @@
 from cereal import car
 from panda import Panda
 from openpilot.common.conversions import Conversions as CV
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.selfdrive.car.hyundai.hyundaicanfd import CanBus
 from openpilot.selfdrive.car.hyundai.values import HyundaiFlags, HyundaiFlagsSP, CAR, DBC, CANFD_CAR, CAMERA_SCC_CAR, CANFD_RADAR_SCC_CAR, \
                                          EV_CAR, HYBRID_CAR, LEGACY_SAFETY_MODE_CAR, UNSUPPORTED_LONGITUDINAL_CAR, NON_SCC_CAR, \

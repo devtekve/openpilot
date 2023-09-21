@@ -5,7 +5,7 @@ import time
 import json
 
 from openpilot.common.basedir import BASEDIR
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.selfdrive.controls.lib.alertmanager import set_offroad_alert
 
 if __name__ == "__main__":

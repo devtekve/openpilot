@@ -6,7 +6,7 @@ import unittest
 import cereal.messaging as messaging
 from cereal import log
 from openpilot.common.gpio import gpio_set, gpio_init
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from panda import Panda, PandaDFU, PandaProtocolMismatch
 from openpilot.selfdrive.test.helpers import phone_only
 from openpilot.selfdrive.manager.process_config import managed_processes

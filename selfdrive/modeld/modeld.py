@@ -8,7 +8,7 @@ from setproctitle import setproctitle
 from cereal.messaging import PubMaster, SubMaster
 from cereal.visionipc import VisionIpcClient, VisionStreamType, VisionBuf
 from openpilot.system.swaglog import cloudlog
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.filter_simple import FirstOrderFilter
 from openpilot.common.realtime import config_realtime_process
 from openpilot.common.transformations.model import get_warp_matrix

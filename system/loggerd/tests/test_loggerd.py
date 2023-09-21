@@ -14,7 +14,7 @@ import cereal.messaging as messaging
 from cereal import log
 from cereal.services import service_list
 from openpilot.common.basedir import BASEDIR
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.timeout import Timeout
 from openpilot.system.hardware.hw import Paths
 from openpilot.system.loggerd.xattr_cache import getxattr

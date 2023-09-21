@@ -5,7 +5,7 @@ import time
 from typing import Callable, Dict, List, Optional, Tuple
 
 from cereal import car
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.basedir import BASEDIR
 from openpilot.system.version import is_comma_remote, is_tested_branch
 from openpilot.selfdrive.car.interfaces import get_interface_attr

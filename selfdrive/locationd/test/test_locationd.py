@@ -7,7 +7,7 @@ import capnp
 
 import cereal.messaging as messaging
 from cereal.services import service_list
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.transformations.coordinates import ecef2geodetic
 
 from openpilot.selfdrive.manager.process_config import managed_processes

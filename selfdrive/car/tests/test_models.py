@@ -9,7 +9,7 @@ from parameterized import parameterized_class
 
 from cereal import log, car
 from openpilot.common.basedir import BASEDIR
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import DT_CTRL
 from openpilot.selfdrive.car.fingerprints import all_known_cars
 from openpilot.selfdrive.car.car_helpers import FRAME_FINGERPRINT, interfaces

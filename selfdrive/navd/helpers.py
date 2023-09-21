@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 from openpilot.common.conversions import Conversions
 from openpilot.common.numpy_fast import clip
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 
 DIRECTIONS = ('left', 'right', 'straight')
 MODIFIABLE_DIRECTIONS = ('left', 'right')

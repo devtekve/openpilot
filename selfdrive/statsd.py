@@ -7,7 +7,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from typing import NoReturn, Union, List, Dict
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from cereal.messaging import SubMaster
 from openpilot.system.swaglog import cloudlog
 from openpilot.system.hardware import HARDWARE

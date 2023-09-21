@@ -7,7 +7,7 @@ from typing import Optional
 
 from datetime import datetime, timedelta
 from openpilot.common.api import api_get
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.spinner import Spinner
 from openpilot.common.basedir import PERSIST
 from openpilot.selfdrive.controls.lib.alertmanager import set_offroad_alert

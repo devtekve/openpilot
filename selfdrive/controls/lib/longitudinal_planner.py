@@ -2,7 +2,7 @@
 import math
 import numpy as np
 from openpilot.common.numpy_fast import clip, interp
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from cereal import car, log
 
 import cereal.messaging as messaging

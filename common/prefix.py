@@ -4,7 +4,7 @@ import uuid
 
 from typing import Optional
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.system.hardware.hw import Paths
 
 class OpenpilotPrefix:

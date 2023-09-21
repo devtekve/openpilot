@@ -16,7 +16,7 @@ from cereal import log
 from openpilot.common.dict_helpers import strip_deprecated_keys
 from openpilot.common.time import MIN_DATE
 from openpilot.common.filter_simple import FirstOrderFilter
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import DT_TRML
 from openpilot.selfdrive.controls.lib.alertmanager import set_offroad_alert
 from openpilot.system.hardware import HARDWARE, TICI, AGNOS

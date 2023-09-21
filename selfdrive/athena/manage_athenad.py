@@ -3,7 +3,7 @@
 import time
 from multiprocessing import Process
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.selfdrive.manager.process import launcher
 from openpilot.system.swaglog import cloudlog
 from openpilot.system.version import get_version, is_dirty

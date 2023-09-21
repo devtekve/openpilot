@@ -15,7 +15,7 @@ from typing import List, Union, Optional
 from markdown_it import MarkdownIt
 
 from openpilot.common.basedir import BASEDIR
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.time import system_time_valid
 from openpilot.system.hardware import AGNOS, HARDWARE
 from openpilot.system.swaglog import cloudlog

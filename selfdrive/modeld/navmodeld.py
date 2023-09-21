@@ -11,7 +11,7 @@ from cereal import messaging
 from cereal.messaging import PubMaster, SubMaster
 from cereal.visionipc import VisionIpcClient, VisionStreamType
 from openpilot.system.swaglog import cloudlog
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import set_realtime_priority
 from openpilot.selfdrive.modeld.constants import IDX_N
 from openpilot.selfdrive.modeld.runners import ModelRunner, Runtime

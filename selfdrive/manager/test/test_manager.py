@@ -5,7 +5,7 @@ import time
 import unittest
 
 from cereal import car
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 import openpilot.selfdrive.manager.manager as manager
 from openpilot.selfdrive.manager.process import ensure_running
 from openpilot.selfdrive.manager.process_config import managed_processes

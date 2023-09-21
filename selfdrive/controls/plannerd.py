@@ -2,7 +2,7 @@
 import os
 import numpy as np
 from cereal import car
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.common.realtime import Priority, config_realtime_process
 from openpilot.system.swaglog import cloudlog
 from openpilot.selfdrive.modeld.constants import T_IDXS

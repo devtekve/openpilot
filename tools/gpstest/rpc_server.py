@@ -8,7 +8,7 @@ from openpilot.system.hardware.hw import Paths
 import rpyc
 from rpyc.utils.server import ThreadedServer
 
-#from openpilot.common.params import Params
+#from openpilot.common.params_pyx import Params
 import cereal.messaging as messaging
 from openpilot.selfdrive.manager.process_config import managed_processes
 from laika.lib.coordinates import ecef2geodetic

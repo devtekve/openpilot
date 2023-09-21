@@ -1,6 +1,6 @@
 import numpy as np
 
-from openpilot.common.params import Params
+from openpilot.common.params_pyx import Params
 from openpilot.tools.sim.lib.common import SimulatorState, vec3
 from openpilot.tools.sim.bridge.common import World, SimulatorBridge
 from openpilot.tools.sim.lib.camerad import W, H

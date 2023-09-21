@@ -505,9 +505,9 @@ SPVehiclesPanel::SPVehiclesPanel(QWidget* parent) : QWidget(parent) {
 
   toggle_layout->addWidget(new LabelControl("Hyundai/Kia/Genesis (HKG)"));
 //  toggle_layout->addWidget(horizontal_line());
-  toggle_layout->addWidget(new ParamControl("EnhancedScc",
-                                                 "Enhanced SCC Radar Interceptor*",
-                                                 "openpilot will take over control of gas and brakes and will NOT disable the car's radar. This preserves AEB.\nOnly enable this feature if you have the Enhanced SCC Radar Interceptor hardware installed.\nWant to get one for your car? Reach out to sunnyhaibin#0865 on Discord for more information.",
+  toggle_layout->addWidget(new ParamControl("HkgSmoothStop",
+                                                 "Smoother stop by sunny",
+                                                 "Smoother stop.",
                                                  "../assets/offroad/icon_blank.png"));
 //  toggle_layout->addWidget(horizontal_line());
   toggle_layout->addWidget(new LabelControl("Toyota", ""));
