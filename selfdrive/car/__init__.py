@@ -39,6 +39,12 @@ def create_button_events(cur_btn: int, prev_btn: int, buttons_dict: Dict[int, ca
   return events
 
 
+def create_mads_event(mads_event_lock: bool) -> capnp.lib.capnp._DynamicStructBuilder:
+  be = car.CarState.ButtonEvent(pressed=mads_event_lock)
+  be.type = ButtonType.altButton1
+  return be
+
+
 def gen_empty_fingerprint():
   return {i: {} for i in range(8)}
 

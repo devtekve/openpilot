@@ -3,7 +3,7 @@ from openpilot.common.conversions import Conversions as CV
 from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
 from openpilot.selfdrive.car.interfaces import CarStateBase
-from openpilot.selfdrive.car.mazda.values import DBC, LKAS_LIMITS, GEN1
+from openpilot.selfdrive.car.mazda.values import DBC, LKAS_LIMITS, GEN1, BUTTON_STATES
 
 class CarState(CarStateBase):
   def __init__(self, CP):
@@ -18,9 +18,20 @@ class CarState(CarStateBase):
     self.lkas_allowed_speed = False
     self.lkas_disabled = False
 
+    self.lkas_enabled = False
+    self.prev_lkas_enabled = False
+
+    self.buttonStates = BUTTON_STATES.copy()
+    self.buttonStatesPrev = BUTTON_STATES.copy()
+
   def update(self, cp, cp_cam):
 
     ret = car.CarState.new_message()
+
+    self.prev_mads_enabled = self.mads_enabled
+    self.prev_lkas_enabled = self.lkas_enabled
+    self.buttonStatesPrev = self.buttonStates.copy()
+
     ret.wheelSpeeds = self.get_wheel_speeds(
       cp.vl["WHEEL_SPEEDS"]["FL"],
       cp.vl["WHEEL_SPEEDS"]["FR"],
@@ -34,14 +45,16 @@ class CarState(CarStateBase):
     speed_kph = cp.vl["ENGINE_DATA"]["SPEED"]
     ret.standstill = speed_kph < .1
 
+    self.lkas_enabled = not self.lkas_disabled
+
     can_gear = int(cp.vl["GEAR"]["GEAR"])
     ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(can_gear, None))
 
     ret.genericToggle = bool(cp.vl["BLINK_INFO"]["HIGH_BEAMS"])
     ret.leftBlindspot = cp.vl["BSM"]["LEFT_BS_STATUS"] != 0
     ret.rightBlindspot = cp.vl["BSM"]["RIGHT_BS_STATUS"] != 0
-    ret.leftBlinker, ret.rightBlinker = self.update_blinker_from_lamp(40, cp.vl["BLINK_INFO"]["LEFT_BLINK"] == 1,
-                                                                      cp.vl["BLINK_INFO"]["RIGHT_BLINK"] == 1)
+    ret.leftBlinker, ret.rightBlinker = ret.leftBlinkerOn, ret.rightBlinkerOn = self.update_blinker_from_lamp(40, cp.vl["BLINK_INFO"]["LEFT_BLINK"] == 1,
+                                                                                                                  cp.vl["BLINK_INFO"]["RIGHT_BLINK"] == 1)
 
     ret.steeringAngleDeg = cp.vl["STEER"]["STEER_ANGLE"]
     ret.steeringTorque = cp.vl["STEER_TORQUE"]["STEER_TORQUE_SENSOR"]
@@ -94,6 +107,11 @@ class CarState(CarStateBase):
     ret.steerFaultTemporary = self.lkas_allowed_speed and lkas_blocked
 
     self.acc_active_last = ret.cruiseState.enabled
+
+    self.buttonStates["accelCruise"] = bool(cp.vl["CRZ_BTNS"]["SET_P"])
+    self.buttonStates["decelCruise"] = bool(cp.vl["CRZ_BTNS"]["SET_M"])
+    self.buttonStates["cancel"] = bool(cp.vl["CRZ_BTNS"]["CAN_OFF"])
+    self.buttonStates["resumeCruise"] = bool(cp.vl["CRZ_BTNS"]["RES"])
 
     self.crz_btns_counter = cp.vl["CRZ_BTNS"]["CTR"]
 

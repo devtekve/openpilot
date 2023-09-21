@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum, IntFlag
+from panda import Panda
 from typing import Dict, List, Union
 
 from cereal import car
@@ -21,11 +22,13 @@ class CarControllerParams:
     self.STEER_DRIVER_FACTOR = 1       # from dbc
 
     if CP.carFingerprint in GLOBAL_GEN2:
-      self.STEER_MAX = 1000
+      self.STEER_MAX = 1400
       self.STEER_DELTA_UP = 40
       self.STEER_DELTA_DOWN = 40
     elif CP.carFingerprint == CAR.IMPREZA_2020:
       self.STEER_MAX = 1439
+    elif CP.safetyConfigs[0].safetyParam == Panda.FLAG_SUBARU_MAX_STEER_IMPREZA_2018:
+      self.STEER_MAX = 3071
     else:
       self.STEER_MAX = 2047
 
@@ -707,7 +710,3 @@ LKAS_ANGLE = {CAR.FORESTER_2022, CAR.OUTBACK_2023, CAR.ASCENT_2023}
 GLOBAL_GEN2 = {CAR.OUTBACK, CAR.LEGACY, CAR.OUTBACK_2023, CAR.ASCENT_2023}
 PREGLOBAL_CARS = {CAR.FORESTER_PREGLOBAL, CAR.LEGACY_PREGLOBAL, CAR.OUTBACK_PREGLOBAL, CAR.OUTBACK_PREGLOBAL_2018}
 HYBRID_CARS = {CAR.CROSSTREK_HYBRID, CAR.FORESTER_HYBRID}
-
-# Cars that temporarily fault when steering angle rate is greater than some threshold.
-# Appears to be all cars that started production after 2020
-STEER_RATE_LIMITED = GLOBAL_GEN2 | {CAR.IMPREZA_2020}

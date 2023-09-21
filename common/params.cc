@@ -63,12 +63,17 @@ bool create_params_path(const std::string &param_path, const std::string &key_pa
 
 std::string ensure_params_path(const std::string &prefix, const std::string &path = {}) {
   std::string params_path = path.empty() ? Path::params() : path;
-  if (!create_params_path(params_path, params_path + prefix)) {
-    throw std::runtime_error(util::string_format(
-        "Failed to ensure params path, errno=%d, path=%s, param_prefix=%s",
-        errno, params_path.c_str(), prefix.c_str()));
+  if (create_params_path(params_path, params_path + prefix)) {
+   return params_path;
   }
-  return params_path;
+  else if (create_params_path("~" + params_path, "~" + params_path + prefix))  {
+     return "~" + params_path;
+  }
+
+   throw std::runtime_error(util::string_format(
+          "Failed to ensure params path, errno=%d, path=%s, param_prefix=%s",
+          errno, params_path.c_str(), prefix.c_str()));
+
 }
 
 class FileLock {

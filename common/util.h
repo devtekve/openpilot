@@ -188,9 +188,9 @@ class LogState {
   void *zctx = nullptr;
   void *sock = nullptr;
   int print_level;
-  std::string endpoint;
+  const char* endpoint;
 
-  LogState(std::string _endpoint) {
+  LogState(const char* _endpoint) {
     endpoint = _endpoint;
   }
 
@@ -202,7 +202,7 @@ class LogState {
     int timeout = 100;
     zmq_setsockopt(sock, ZMQ_LINGER, &timeout, sizeof(timeout));
 
-    zmq_connect(sock, endpoint.c_str());
+    zmq_connect(sock, endpoint);
     initialized = true;
   }
 

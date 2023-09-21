@@ -52,15 +52,14 @@ procs = [
   PythonProcess("micd", "system.micd", iscar),
   PythonProcess("timezoned", "system.timezoned", always_run, enabled=not PC),
 
-  PythonProcess("dmonitoringmodeld", "selfdrive.modeld.dmonitoringmodeld", driverview, enabled=(not PC or WEBCAM)),
+  NativeProcess("dmonitoringmodeld", "selfdrive/modeld", ["./dmonitoringmodeld"], driverview, enabled=(not PC or WEBCAM)),
   NativeProcess("encoderd", "system/loggerd", ["./encoderd"], only_onroad),
   NativeProcess("stream_encoderd", "system/loggerd", ["./encoderd", "--stream"], notcar),
   NativeProcess("loggerd", "system/loggerd", ["./loggerd"], logging),
   NativeProcess("modeld", "selfdrive/modeld", ["./modeld"], only_onroad),
   NativeProcess("mapsd", "selfdrive/navd", ["./mapsd"], only_onroad),
-  PythonProcess("navmodeld", "selfdrive.modeld.navmodeld", only_onroad),
+  NativeProcess("navmodeld", "selfdrive/modeld", ["./navmodeld"], only_onroad),
   NativeProcess("sensord", "system/sensord", ["./sensord"], only_onroad, enabled=not PC),
-  NativeProcess("ui", "selfdrive/ui", ["./ui"], always_run, watchdog_max_dt=(5 if not PC else None)),
   NativeProcess("soundd", "selfdrive/ui/soundd", ["./soundd"], only_onroad),
   NativeProcess("locationd", "selfdrive/locationd", ["./locationd"], only_onroad),
   NativeProcess("boardd", "selfdrive/boardd", ["./boardd"], always_run, enabled=False),
@@ -83,6 +82,13 @@ procs = [
   PythonProcess("updated", "selfdrive.updated", only_offroad, enabled=not PC),
   PythonProcess("uploader", "system.loggerd.uploader", always_run),
   PythonProcess("statsd", "selfdrive.statsd", always_run),
+  NativeProcess("ui", "selfdrive/ui", ["./ui"], always_run, watchdog_max_dt=(5 if not PC else None), always_watchdog=True),
+
+  PythonProcess("gpxd", "selfdrive.gpxd.gpxd", only_onroad),
+  PythonProcess("gpxd_uploader", "selfdrive.gpxd.gpx_uploader", only_offroad),
+  PythonProcess("mapd", "selfdrive.mapd.mapd", only_onroad),
+  PythonProcess("otisserv", "selfdrive.navd.otisserv", always_run),
+  PythonProcess("fleet_manager", "system.fleetmanager.fleet_manager", only_offroad),
 
   # debug procs
   NativeProcess("bridge", "cereal/messaging", ["./bridge"], notcar),

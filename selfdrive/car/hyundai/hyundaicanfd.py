@@ -35,13 +35,13 @@ class CanBus(CanBusBase):
     return self._cam
 
 
-def create_steering_messages(packer, CP, CAN, enabled, lat_active, apply_steer):
+def create_steering_messages(packer, CP, CAN, enabled, lat_active, apply_steer , lateral_paused, blinking_icon):
 
   ret = []
 
   values = {
     "LKA_MODE": 2,
-    "LKA_ICON": 2 if enabled else 1,
+    "LKA_ICON": 2 if lat_active else 3 if blinking_icon else 1 if lateral_paused else 0,
     "TORQUE_REQUEST": apply_steer,
     "LKA_ASSIST": 0,
     "STEER_REQ": 1 if lat_active else 0,
@@ -113,10 +113,10 @@ def create_acc_cancel(packer, CP, CAN, cruise_info_copy):
   })
   return packer.make_can_msg("SCC_CONTROL", CAN.ECAN, values)
 
-def create_lfahda_cluster(packer, CAN, enabled):
+def create_lfahda_cluster(packer, CAN, enabled, lat_active, lateral_paused, blinking_icon):
   values = {
     "HDA_ICON": 1 if enabled else 0,
-    "LFA_ICON": 2 if enabled else 0,
+    "LFA_ICON": 2 if lat_active else 3 if blinking_icon else 1 if lateral_paused else 0,
   }
   return packer.make_can_msg("LFAHDA_CLUSTER", CAN.ECAN, values)
 
@@ -172,15 +172,11 @@ def create_spas_messages(packer, CAN, frame, left_blink, right_blink):
   return ret
 
 
-def create_adrv_messages(packer, CAN, frame):
+def create_adrv_messages(packer, CAN, frame, hda2=False):
   # messages needed to car happy after disabling
   # the ADAS Driving ECU to do longitudinal control
 
   ret = []
-
-  values = {
-  }
-  ret.append(packer.make_can_msg("ADRV_0x51", CAN.ACAN, values))
 
   if frame % 2 == 0:
     values = {
@@ -192,32 +188,37 @@ def create_adrv_messages(packer, CAN, frame):
     }
     ret.append(packer.make_can_msg("ADRV_0x160", CAN.ECAN, values))
 
-  if frame % 5 == 0:
+  if hda2:
     values = {
-      'SET_ME_1C': 0x1c,
-      'SET_ME_FF': 0xff,
-      'SET_ME_TMP_F': 0xf,
-      'SET_ME_TMP_F_2': 0xf,
     }
-    ret.append(packer.make_can_msg("ADRV_0x1ea", CAN.ECAN, values))
+    ret.append(packer.make_can_msg("ADRV_0x51", CAN.ACAN, values))
 
-    values = {
-      'SET_ME_E1': 0xe1,
-      'SET_ME_3A': 0x3a,
-    }
-    ret.append(packer.make_can_msg("ADRV_0x200", CAN.ECAN, values))
+    if frame % 5 == 0:
+      values = {
+        'SET_ME_1C': 0x1c,
+        'SET_ME_FF': 0xff,
+        'SET_ME_TMP_F': 0xf,
+        'SET_ME_TMP_F_2': 0xf,
+      }
+      ret.append(packer.make_can_msg("ADRV_0x1ea", CAN.ECAN, values))
 
-  if frame % 20 == 0:
-    values = {
-      'SET_ME_15': 0x15,
-    }
-    ret.append(packer.make_can_msg("ADRV_0x345", CAN.ECAN, values))
+      values = {
+        'SET_ME_E1': 0xe1,
+        'SET_ME_3A': 0x3a,
+      }
+      ret.append(packer.make_can_msg("ADRV_0x200", CAN.ECAN, values))
 
-  if frame % 100 == 0:
-    values = {
-      'SET_ME_22': 0x22,
-      'SET_ME_41': 0x41,
-    }
-    ret.append(packer.make_can_msg("ADRV_0x1da", CAN.ECAN, values))
+    if frame % 20 == 0:
+      values = {
+        'SET_ME_15': 0x15,
+      }
+      ret.append(packer.make_can_msg("ADRV_0x345", CAN.ECAN, values))
+
+    if frame % 100 == 0:
+      values = {
+        'SET_ME_22': 0x22,
+        'SET_ME_41': 0x41,
+      }
+      ret.append(packer.make_can_msg("ADRV_0x1da", CAN.ECAN, values))
 
   return ret

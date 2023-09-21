@@ -381,6 +381,13 @@
     </message>
 </context>
 <context>
+    <name>MaxTimeOffroad</name>
+    <message>
+        <source>m</source>
+        <translation type="obsolete">ม.</translation>
+    </message>
+</context>
+<context>
     <name>MultiOptionDialog</name>
     <message>
         <source>Select</source>
@@ -925,6 +932,10 @@ This may take up to a minute.</source>
     <message>
         <source>up to date, last checked %1</source>
         <translation>ล่าสุดแล้ว ตรวจสอบครั้งสุดท้ายเมื่อ %1</translation>
+    </message>
+    <message>
+        <source>Reboot</source>
+        <translation type="obsolete">รีบูต</translation>
     </message>
 </context>
 <context>

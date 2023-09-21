@@ -381,6 +381,13 @@
     </message>
 </context>
 <context>
+    <name>MaxTimeOffroad</name>
+    <message>
+        <source>m</source>
+        <translation type="obsolete">ﾒｰﾄﾙ</translation>
+    </message>
+</context>
+<context>
     <name>MultiOptionDialog</name>
     <message>
         <source>Select</source>
@@ -924,6 +931,10 @@ This may take up to a minute.</source>
         <source>never</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Reboot</source>
+        <translation type="obsolete">再起動</translation>
+    </message>
 </context>
 <context>
     <name>SshControl</name>
@@ -1077,14 +1088,6 @@ This may take up to a minute.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Aggressive</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Standard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Relaxed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1094,10 +1097,6 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>On this car, openpilot defaults to the car&apos;s built-in ACC instead of openpilot&apos;s longitudinal control. Enable this to switch to openpilot longitudinal control. Enabling Experimental mode is recommended when enabling openpilot longitudinal control alpha.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Standard is recommended. In aggressive mode, openpilot will follow lead cars closer and be more aggressive with the gas and brake. In relaxed mode openpilot will stay further away from lead cars.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1126,6 +1125,18 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>Enable the openpilot longitudinal control (alpha) toggle to allow Experimental mode.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Aggressive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Standard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Standard is recommended. In aggressive mode, openpilot will follow lead cars closer and be more aggressive with the gas and brake. In relaxed mode openpilot will stay further away from lead cars.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

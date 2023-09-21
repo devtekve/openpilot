@@ -9,7 +9,7 @@ def create_steering_control(packer, bus, apply_steer, lkas_enabled):
   return packer.make_can_msg("HCA_1", bus, values)
 
 
-def create_lka_hud_control(packer, bus, ldw_stock_values, enabled, steering_pressed, hud_alert, hud_control):
+def create_lka_hud_control(packer, bus, ldw_stock_values, enabled, lat_active, steering_pressed, hud_alert, hud_control):
   values = {}
   if len(ldw_stock_values):
     values = {s: ldw_stock_values[s] for s in [
@@ -21,8 +21,8 @@ def create_lka_hud_control(packer, bus, ldw_stock_values, enabled, steering_pres
     ]}
 
   values.update({
-    "LDW_Lampe_gelb": 1 if enabled and steering_pressed else 0,
-    "LDW_Lampe_gruen": 1 if enabled and not steering_pressed else 0,
+    "LDW_Lampe_gelb": 1 if lat_active and steering_pressed else 0,
+    "LDW_Lampe_gruen": 1 if lat_active and not steering_pressed else 0,
     "LDW_Lernmodus_links": 3 if hud_control.leftLaneDepart else 1 + hud_control.leftLaneVisible,
     "LDW_Lernmodus_rechts": 3 if hud_control.rightLaneDepart else 1 + hud_control.rightLaneVisible,
     "LDW_Textbits": hud_alert,
@@ -31,7 +31,7 @@ def create_lka_hud_control(packer, bus, ldw_stock_values, enabled, steering_pres
   return packer.make_can_msg("LDW_Status", bus, values)
 
 
-def create_acc_buttons_control(packer, bus, gra_stock_values, cancel=False, resume=False):
+def create_acc_buttons_control(packer, bus, gra_stock_values, buttons=0, cancel=False, resume=False):
   values = {s: gra_stock_values[s] for s in [
     "GRA_Hauptschalt",      # ACC button, on/off
     "GRA_Typ_Hauptschalt",  # ACC button, momentary vs latching
@@ -39,10 +39,18 @@ def create_acc_buttons_control(packer, bus, gra_stock_values, cancel=False, resu
     "GRA_Sender",           # ACC button, CAN message originator
   ]}
 
+  accel_cruise = 1 if buttons == 1 else 0
+  decel_cruise = 1 if buttons == 2 else 0
+  resume_cruise = 1 if buttons == 3 else 0
+  set_cruise = 1 if buttons == 4 else 0
+
   values.update({
     "COUNTER": (gra_stock_values["COUNTER"] + 1) % 16,
     "GRA_Abbrechen": cancel,
-    "GRA_Recall": resume,
+    "GRA_Recall": resume or resume_cruise,
+    "GRA_Neu_Setzen": set_cruise,
+    "GRA_Down_kurz": decel_cruise,
+    "GRA_Up_kurz": accel_cruise,
   })
 
   return packer.make_can_msg("GRA_Neu", bus, values)
@@ -91,7 +99,7 @@ def create_acc_accel_control(packer, bus, acc_type, acc_enabled, accel, acc_cont
   return commands
 
 
-def create_acc_hud_control(packer, bus, acc_hud_status, set_speed, lead_distance):
+def create_acc_hud_control(packer, bus, acc_hud_status, set_speed, lead_distance, gac_tr):
   values = {
     "ACA_StaACC": acc_hud_status,
     "ACA_Zeitluecke": 2,

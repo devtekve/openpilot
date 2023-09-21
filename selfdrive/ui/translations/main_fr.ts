@@ -382,6 +382,13 @@
     </message>
 </context>
 <context>
+    <name>MaxTimeOffroad</name>
+    <message>
+        <source>m</source>
+        <translation type="obsolete">m</translation>
+    </message>
+</context>
+<context>
     <name>MultiOptionDialog</name>
     <message>
         <source>Select</source>
@@ -929,6 +936,10 @@ Cela peut prendre jusqu&apos;à une minute.</translation>
     <message>
         <source>up to date, last checked %1</source>
         <translation>à jour, dernière vérification %1</translation>
+    </message>
+    <message>
+        <source>Reboot</source>
+        <translation type="obsolete">Redémarrer</translation>
     </message>
 </context>
 <context>

@@ -1,13 +1,8 @@
 from openpilot.common.numpy_fast import clip, interp
 from opendbc.can.packer import CANPacker
-from openpilot.selfdrive.car import apply_driver_steer_torque_limits, common_fault_avoidance
+from openpilot.selfdrive.car import apply_driver_steer_torque_limits
 from openpilot.selfdrive.car.subaru import subarucan
-from openpilot.selfdrive.car.subaru.values import DBC, GLOBAL_GEN2, PREGLOBAL_CARS, HYBRID_CARS, STEER_RATE_LIMITED, CanBus, CarControllerParams, SubaruFlags
-
-# FIXME: These limits aren't exact. The real limit is more than likely over a larger time period and
-# involves the total steering angle change rather than rate, but these limits work well for now
-MAX_STEER_RATE = 25  # deg/s
-MAX_STEER_RATE_FRAMES = 7  # tx control frames needed before torque can be cut
+from openpilot.selfdrive.car.subaru.values import DBC, GLOBAL_GEN2, PREGLOBAL_CARS, HYBRID_CARS, CanBus, CarControllerParams, SubaruFlags
 
 
 class CarController:
@@ -17,7 +12,6 @@ class CarController:
     self.frame = 0
 
     self.cruise_button_prev = 0
-    self.steer_rate_counter = 0
 
     self.p = CarControllerParams(CP)
     self.packer = CANPacker(DBC[CP.carFingerprint]['pt'])
@@ -44,15 +38,7 @@ class CarController:
       if self.CP.carFingerprint in PREGLOBAL_CARS:
         can_sends.append(subarucan.create_preglobal_steering_control(self.packer, self.frame // self.p.STEER_STEP, apply_steer, CC.latActive))
       else:
-        apply_steer_req = CC.latActive
-
-        if self.CP.carFingerprint in STEER_RATE_LIMITED:
-          # Steering rate fault prevention
-          self.steer_rate_counter, apply_steer_req = \
-            common_fault_avoidance(abs(CS.out.steeringRateDeg) > MAX_STEER_RATE, apply_steer_req,
-                                  self.steer_rate_counter, MAX_STEER_RATE_FRAMES)
-
-        can_sends.append(subarucan.create_steering_control(self.packer, apply_steer, apply_steer_req))
+        can_sends.append(subarucan.create_steering_control(self.packer, apply_steer, CC.latActive))
 
       self.apply_steer_last = apply_steer
 
@@ -97,7 +83,7 @@ class CarController:
         can_sends.append(subarucan.create_es_dashstatus(self.packer, self.frame // 10, CS.es_dashstatus_msg, CC.enabled, self.CP.openpilotLongitudinalControl,
                                                         CC.longActive, hud_control.leadVisible))
 
-        can_sends.append(subarucan.create_es_lkas_state(self.packer, self.frame // 10, CS.es_lkas_state_msg, CC.enabled, hud_control.visualAlert,
+        can_sends.append(subarucan.create_es_lkas_state(self.packer, self.frame // 10, CS.es_lkas_state_msg, CC.latActive, CS.madsEnabled, hud_control.visualAlert,
                                                         hud_control.leftLaneVisible, hud_control.rightLaneVisible,
                                                         hud_control.leftLaneDepart, hud_control.rightLaneDepart))
 

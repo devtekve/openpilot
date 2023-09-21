@@ -381,6 +381,13 @@
     </message>
 </context>
 <context>
+    <name>MaxTimeOffroad</name>
+    <message>
+        <source>m</source>
+        <translation type="obsolete">m</translation>
+    </message>
+</context>
+<context>
     <name>MultiOptionDialog</name>
     <message>
         <source>Select</source>
@@ -925,6 +932,10 @@ This may take up to a minute.</source>
     <message>
         <source>never</source>
         <translation>从未更新</translation>
+    </message>
+    <message>
+        <source>Reboot</source>
+        <translation type="obsolete">重启</translation>
     </message>
 </context>
 <context>

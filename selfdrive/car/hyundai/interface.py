@@ -1,18 +1,20 @@
 from cereal import car
 from panda import Panda
 from openpilot.common.conversions import Conversions as CV
+from openpilot.common.params import Params
 from openpilot.selfdrive.car.hyundai.hyundaicanfd import CanBus
-from openpilot.selfdrive.car.hyundai.values import HyundaiFlags, CAR, DBC, CANFD_CAR, CAMERA_SCC_CAR, CANFD_RADAR_SCC_CAR, \
-                                         EV_CAR, HYBRID_CAR, LEGACY_SAFETY_MODE_CAR, UNSUPPORTED_LONGITUDINAL_CAR, \
+from openpilot.selfdrive.car.hyundai.values import HyundaiFlags, HyundaiFlagsSP, CAR, DBC, CANFD_CAR, CAMERA_SCC_CAR, CANFD_RADAR_SCC_CAR, \
+                                         EV_CAR, HYBRID_CAR, LEGACY_SAFETY_MODE_CAR, UNSUPPORTED_LONGITUDINAL_CAR, NON_SCC_CAR, \
                                          Buttons
 from openpilot.selfdrive.car.hyundai.radar_interface import RADAR_START_ADDR
-from openpilot.selfdrive.car import create_button_events, get_safety_config
+from openpilot.selfdrive.car import create_button_events, get_safety_config, create_mads_event
 from openpilot.selfdrive.car.interfaces import CarInterfaceBase
 from openpilot.selfdrive.car.disable_ecu import disable_ecu
 
 Ecu = car.CarParams.Ecu
 ButtonType = car.CarState.ButtonEvent.Type
 EventName = car.CarEvent.EventName
+GearShifter = car.CarState.GearShifter
 ENABLE_BUTTONS = (Buttons.RES_ACCEL, Buttons.SET_DECEL, Buttons.CANCEL)
 BUTTONS_DICT = {Buttons.RES_ACCEL: ButtonType.accelCruise, Buttons.SET_DECEL: ButtonType.decelCruise,
                 Buttons.GAP_DIST: ButtonType.gapAdjustCruise, Buttons.CANCEL: ButtonType.cancel}
@@ -23,12 +25,13 @@ class CarInterface(CarInterfaceBase):
   def _get_params(ret, candidate, fingerprint, car_fw, experimental_long, docs):
     ret.carName = "hyundai"
     ret.radarUnavailable = RADAR_START_ADDR not in fingerprint[1] or DBC[ret.carFingerprint]["radar"] is None
+    ret.customStockLongAvailable = True
 
     # These cars have been put into dashcam only due to both a lack of users and test coverage.
     # These cars likely still work fine. Once a user confirms each car works and a test route is
     # added to selfdrive/car/tests/routes.py, we can remove it from this list.
     # FIXME: the Optima Hybrid uses a different SCC12 checksum
-    ret.dashcamOnly = candidate in {CAR.KIA_OPTIMA_H, }
+    ret.dashcamOnly = candidate in ({CAR.KIA_OPTIMA_H, })
 
     hda2 = Ecu.adas in [fw.ecu for fw in car_fw]
     CAN = CanBus(None, hda2, fingerprint)
@@ -60,15 +63,14 @@ class CarInterface(CarInterfaceBase):
       if 0x38d in fingerprint[0] or 0x38d in fingerprint[2]:
         ret.flags |= HyundaiFlags.USE_FCA.value
 
+      if 0x2AB in fingerprint[0]:
+        ret.spFlags |= HyundaiFlagsSP.SP_ENHANCED_SCC.value
+
     ret.steerActuatorDelay = 0.1  # Default delay
     ret.steerLimitTimer = 0.4
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
-    if candidate == CAR.AZERA_6TH_GEN:
-      ret.mass = 1540.  # average
-      ret.wheelbase = 2.885
-      ret.steerRatio = 14.5
-    elif candidate in (CAR.SANTA_FE, CAR.SANTA_FE_2022, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022):
+    if candidate in (CAR.SANTA_FE, CAR.SANTA_FE_2022, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022):
       ret.mass = 3982. * CV.LB_TO_KG
       ret.wheelbase = 2.766
       # Values from optimizer
@@ -94,7 +96,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 15.4            # 14 is Stock | Settled Params Learner values are steerRatio: 15.401566348670535
       ret.tireStiffnessFactor = 0.385    # stiffnessFactor settled on 1.0081302973865127
       ret.minSteerSpeed = 32 * CV.MPH_TO_MS
-    elif candidate == CAR.ELANTRA_2021:
+    elif candidate in (CAR.ELANTRA_2021, CAR.ELANTRA_2022_NON_SCC):
       ret.mass = 2800. * CV.LB_TO_KG
       ret.wheelbase = 2.72
       ret.steerRatio = 12.9
@@ -173,7 +175,7 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 1825.
       ret.wheelbase = 2.78
       ret.steerRatio = 14.4 * 1.15   # 15% higher at the center seems reasonable
-    elif candidate == CAR.KIA_FORTE:
+    elif candidate in (CAR.KIA_FORTE, CAR. KIA_FORTE_2019_NON_SCC, CAR.KIA_FORTE_2021_NON_SCC):
       ret.mass = 2878. * CV.LB_TO_KG
       ret.wheelbase = 2.80
       ret.steerRatio = 13.75
@@ -215,10 +217,6 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 2087.
       ret.wheelbase = 3.09
       ret.steerRatio = 14.23
-    elif candidate == CAR.KIA_K8_HEV_1ST_GEN:
-      ret.mass = 1630.  # https://carprices.ae/brands/kia/2023/k8/1.6-turbo-hybrid
-      ret.wheelbase = 2.895
-      ret.steerRatio = 13.27  # guesstimate from K5 platform
 
     # Genesis
     elif candidate == CAR.GENESIS_GV60_EV_1ST_GEN:
@@ -231,7 +229,7 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 1640.0
       ret.wheelbase = 2.84
       ret.steerRatio = 13.56
-    elif candidate == CAR.GENESIS_G70_2020:
+    elif candidate in (CAR.GENESIS_G70_2020, CAR.GENESIS_G70_2021_NON_SCC):
       ret.mass = 3673.0 * CV.LB_TO_KG
       ret.wheelbase = 2.83
       ret.steerRatio = 12.9
@@ -256,11 +254,11 @@ class CarInterface(CarInterfaceBase):
     if candidate in CANFD_CAR:
       ret.longitudinalTuning.kpV = [0.1]
       ret.longitudinalTuning.kiV = [0.0]
-      ret.experimentalLongitudinalAvailable = candidate in (HYBRID_CAR | EV_CAR) and candidate not in CANFD_RADAR_SCC_CAR
+      ret.experimentalLongitudinalAvailable = candidate not in NON_SCC_CAR
     else:
       ret.longitudinalTuning.kpV = [0.5]
       ret.longitudinalTuning.kiV = [0.0]
-      ret.experimentalLongitudinalAvailable = candidate not in (UNSUPPORTED_LONGITUDINAL_CAR | CAMERA_SCC_CAR)
+      ret.experimentalLongitudinalAvailable = candidate not in (UNSUPPORTED_LONGITUDINAL_CAR | NON_SCC_CAR)
     ret.openpilotLongitudinalControl = experimental_long and ret.experimentalLongitudinalAvailable
     ret.pcmCruise = not ret.openpilotLongitudinalControl
 
@@ -274,8 +272,16 @@ class CarInterface(CarInterfaceBase):
     # *** feature detection ***
     if candidate in CANFD_CAR:
       ret.enableBsm = 0x1e5 in fingerprint[CAN.ECAN]
+
+      if 0x1fa in fingerprint[CAN.ECAN]:
+        ret.spFlags |= HyundaiFlagsSP.SP_NAV_MSG.value
+      if Params().get("DongleId", encoding='utf8') == "012c95f06918eca4":
+        ret.spFlags |= HyundaiFlagsSP.SP_UPSTREAM_TACO.value
     else:
       ret.enableBsm = 0x58b in fingerprint[0]
+
+      if 0x544 in fingerprint[0]:
+        ret.spFlags |= HyundaiFlagsSP.SP_NAV_MSG.value
 
     # *** panda safety config ***
     if candidate in CANFD_CAR:
@@ -292,6 +298,8 @@ class CarInterface(CarInterfaceBase):
         ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_CANFD_ALT_BUTTONS
       if ret.flags & HyundaiFlags.CANFD_CAMERA_SCC:
         ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_CAMERA_SCC
+      if ret.spFlags & HyundaiFlagsSP.SP_UPSTREAM_TACO:
+        ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_UPSTREAM_TACO
     else:
       if candidate in LEGACY_SAFETY_MODE_CAR:
         # these cars require a special panda safety mode due to missing counters and checksums in the messages
@@ -301,6 +309,16 @@ class CarInterface(CarInterfaceBase):
 
       if candidate in CAMERA_SCC_CAR:
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_HYUNDAI_CAMERA_SCC
+
+      if 0x391 in fingerprint[0]:
+        ret.spFlags |= HyundaiFlagsSP.SP_CAN_LFA_BTN.value
+        ret.safetyConfigs[0].safetyParam |= Panda.FLAG_HYUNDAI_LFA_BTN
+
+      if ret.spFlags & HyundaiFlagsSP.SP_ENHANCED_SCC:
+        ret.safetyConfigs[0].safetyParam |= Panda.FLAG_HYUNDAI_ESCC
+
+      if candidate in NON_SCC_CAR:
+        ret.safetyConfigs[0].safetyParam |= Panda.FLAG_HYUNDAI_NON_SCC
 
     if ret.openpilotLongitudinalControl:
       ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_LONG
@@ -315,12 +333,20 @@ class CarInterface(CarInterfaceBase):
 
     ret.centerToFront = ret.wheelbase * 0.4
 
+    # Detect smartMDPS, which bypasses EPS low speed lockout, allowing sunnypilot to send steering commands down to 0
+    if 0x2AA in fingerprint[0]:
+      ret.minSteerSpeed = 0.
+
+    if Params().get_bool("HkgSmoothStop"):
+      ret.vEgoStopping = 0.1
+
     return ret
 
   @staticmethod
   def init(CP, logcan, sendcan):
-    if CP.openpilotLongitudinalControl and not (CP.flags & HyundaiFlags.CANFD_CAMERA_SCC.value):
-      addr, bus = 0x7d0, 0
+    if CP.openpilotLongitudinalControl and not ((CP.flags & HyundaiFlags.CANFD_CAMERA_SCC.value) or (CP.spFlags & HyundaiFlagsSP.SP_ENHANCED_SCC)) and \
+      CP.carFingerprint not in CAMERA_SCC_CAR:
+      addr, bus = 0x7d0, CanBus(CP).ECAN if CP.carFingerprint in CANFD_CAR else 0
       if CP.flags & HyundaiFlags.CANFD_HDA2.value:
         addr, bus = 0x730, CanBus(CP).ECAN
       disable_ecu(logcan, sendcan, bus=bus, addr=addr, com_cont_req=b'\x28\x83\x01')
@@ -331,23 +357,78 @@ class CarInterface(CarInterfaceBase):
 
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
+    self.CS = self.sp_update_params(self.CS)
 
-    if self.CS.CP.openpilotLongitudinalControl:
-      ret.buttonEvents = create_button_events(self.CS.cruise_buttons[-1], self.CS.prev_cruise_buttons, BUTTONS_DICT)
+    buttonEvents = create_button_events(self.CS.cruise_buttons[-1], self.CS.prev_cruise_buttons, BUTTONS_DICT)
+
+    self.CS.accEnabled, buttonEvents = self.get_sp_v_cruise_non_pcm_state(ret, self.CS.accEnabled,
+                                                                          buttonEvents, c.vCruise)
+
+    self.CS.mads_enabled = False if not self.mads_main_toggle else self.CS.mads_enabled
+
+    if ret.cruiseState.available:
+      if not self.CP.pcmCruiseSpeed:
+        if self.CS.prev_main_buttons == 1:
+          if self.CS.main_buttons[-1] != 1:
+            self.CS.accEnabled = True
+          elif self.CS.prev_cruise_buttons == 4:
+            if self.CS.cruise_buttons[-1] != 4:
+              self.accEnabled = True
+      if self.enable_mads:
+        if not self.CS.prev_mads_enabled and self.CS.mads_enabled:
+          self.CS.madsEnabled = True
+        if self.CS.prev_lfa_enabled != 1 and self.CS.lfa_enabled == 1:
+          self.CS.madsEnabled = not self.CS.madsEnabled
+        self.CS.madsEnabled = self.get_acc_mads(ret.cruiseState.enabled, self.CS.accEnabled, self.CS.madsEnabled)
+      ret, self.CS = self.toggle_gac(ret, self.CS, (self.CS.cruise_buttons[-1] == 3), 1, 3, 4, "-")
+    else:
+      self.CS.madsEnabled = False
+
+    if not self.CP.pcmCruise or not self.CP.pcmCruiseSpeed:
+      if not self.CP.pcmCruise:
+        if any(b.type == ButtonType.cancel for b in buttonEvents):
+          self.CS.madsEnabled, self.CS.accEnabled = self.get_sp_cancel_cruise_state(self.CS.madsEnabled)
+      if not self.CP.pcmCruiseSpeed:
+        if not ret.cruiseState.enabled:
+          self.CS.madsEnabled, self.CS.accEnabled = self.get_sp_cancel_cruise_state(self.CS.madsEnabled)
+    if self.get_sp_pedal_disengage(ret):
+      self.CS.madsEnabled, self.CS.accEnabled = self.get_sp_cancel_cruise_state(self.CS.madsEnabled)
+      ret.cruiseState.enabled = False if self.CP.pcmCruise else self.CS.accEnabled
+
+    ret, self.CS = self.get_sp_common_state(ret, self.CS, gap_button=(self.CS.cruise_buttons[-1] == 3))
+
+    # MADS BUTTON
+    if self.CS.out.madsEnabled != self.CS.madsEnabled:
+      if self.mads_event_lock:
+        buttonEvents.append(create_mads_event(self.mads_event_lock))
+        self.mads_event_lock = False
+    else:
+      if not self.mads_event_lock:
+        buttonEvents.append(create_mads_event(self.mads_event_lock))
+        self.mads_event_lock = True
+
+    ret.buttonEvents = buttonEvents
 
     # On some newer model years, the CANCEL button acts as a pause/resume button based on the PCM state
     # To avoid re-engaging when openpilot cancels, check user engagement intention via buttons
     # Main button also can trigger an engagement on these cars
     allow_enable = any(btn in ENABLE_BUTTONS for btn in self.CS.cruise_buttons) or any(self.CS.main_buttons)
-    events = self.create_common_events(ret, pcm_enable=self.CS.CP.pcmCruise, allow_enable=allow_enable)
+    events = self.create_common_events(ret, c, extra_gears=[GearShifter.sport, GearShifter.low, GearShifter.manumatic],
+                                       pcm_enable=False, allow_enable=allow_enable)
+
+    events, ret = self.create_sp_events(self.CS, ret, events, main_enabled=True, allow_enable=allow_enable)
 
     # low speed steer alert hysteresis logic (only for cars with steer cut off above 10 m/s)
     if ret.vEgo < (self.CP.minSteerSpeed + 2.) and self.CP.minSteerSpeed > 10.:
       self.low_speed_alert = True
     if ret.vEgo > (self.CP.minSteerSpeed + 4.):
       self.low_speed_alert = False
-    if self.low_speed_alert:
+    if self.low_speed_alert and self.CS.madsEnabled:
       events.add(car.CarEvent.EventName.belowSteerSpeed)
+
+    ret.customStockLong = self.CS.update_custom_stock_long(self.CC.cruise_button, self.CC.final_speed_kph,
+                                                           self.CC.target_speed, self.CC.v_set_dis,
+                                                           self.CC.speed_diff, self.CC.button_type)
 
     ret.events = events.to_msg()
 

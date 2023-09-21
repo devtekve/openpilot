@@ -10,6 +10,7 @@ from cereal import log
 from openpilot.common.params import Params, put_nonblocking
 from openpilot.common.realtime import config_realtime_process, DT_MDL
 from openpilot.common.numpy_fast import clip
+from openpilot.selfdrive.car.chrysler.values import ChryslerFlagsSP
 from openpilot.selfdrive.locationd.models.car_kf import CarKalman, ObservationKind, States
 from openpilot.selfdrive.locationd.models.constants import GENERATED_DIR
 from openpilot.system.swaglog import cloudlog
@@ -228,6 +229,8 @@ def main(sm=None, pm=None):
         0.2 <= liveParameters.stiffnessFactor <= 5.0,
         min_sr <= liveParameters.steerRatio <= max_sr,
       ))
+      if CP.carName == "chrysler" and CP.spFlags & ChryslerFlagsSP.SP_RAM_HD_PARAMSD_IGNORE:
+        liveParameters.valid = True
       liveParameters.steerRatioStd = float(P[States.STEER_RATIO].item())
       liveParameters.stiffnessFactorStd = float(P[States.STIFFNESS].item())
       liveParameters.angleOffsetAverageStd = float(P[States.ANGLE_OFFSET].item())

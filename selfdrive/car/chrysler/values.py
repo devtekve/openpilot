@@ -16,6 +16,10 @@ class ChryslerFlags(IntFlag):
   HIGHER_MIN_STEERING_SPEED = 1
 
 
+class ChryslerFlagsSP(IntFlag):
+  SP_RAM_HD_PARAMSD_IGNORE = 1
+
+
 class CAR:
   # Chrysler
   PACIFICA_2017_HYBRID = "CHRYSLER PACIFICA HYBRID 2017"
@@ -44,11 +48,19 @@ class CarControllerParams:
     elif CP.carFingerprint in RAM_DT:
       self.STEER_DELTA_UP = 6
       self.STEER_DELTA_DOWN = 6
-      self.STEER_MAX = 261  # EPS allows more, up to 350?
+      self.STEER_MAX = 350  # EPS allows more, up to 350?
     else:
       self.STEER_DELTA_UP = 3
       self.STEER_DELTA_DOWN = 3
       self.STEER_MAX = 261  # higher than this faults the EPS
+
+
+BUTTON_STATES = {
+  "accelCruise": False,
+  "decelCruise": False,
+  "cancel": False,
+  "resumeCruise": False,
+}
 
 
 STEER_THRESHOLD = 120

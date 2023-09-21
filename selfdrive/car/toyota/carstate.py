@@ -24,6 +24,13 @@ TEMP_STEER_FAULTS = (0, 9, 11, 21, 25)
 # - prolonged high driver torque: 17 (permanent)
 PERM_STEER_FAULTS = (3, 17)
 
+_TRAFFIC_SINGAL_MAP = {
+  1: "kph",
+  36: "mph",
+  65: "No overtake",
+  66: "No overtake"
+}
+
 
 class CarState(CarStateBase):
   def __init__(self, CP):
@@ -39,13 +46,28 @@ class CarState(CarStateBase):
     # Need to apply an offset as soon as the steering angle measurements are both received
     self.accurate_steer_angle_seen = False
     self.angle_offset = FirstOrderFilter(None, 60.0, DT_CTRL, initialized=False)
+    self._init_traffic_signals()
 
     self.low_speed_lockout = False
     self.acc_type = 1
     self.lkas_hud = {}
 
+    self.lkas_enabled = None
+    self.prev_lkas_enabled = None
+    self.lta_status = False
+    self.prev_lta_status = False
+    self.lta_status_active = False
+    self.gac_send = False
+    self.gac_send_counter = 0
+    self.follow_distance = 0
+
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
+
+    self.prev_mads_enabled = self.mads_enabled
+    self.prev_lkas_enabled = self.lkas_enabled
+    self.prev_lta_status = self.lta_status
+    self.prev_gap_dist_button = self.gap_dist_button
 
     ret.doorOpen = any([cp.vl["BODY_CONTROL_STATE"]["DOOR_OPEN_FL"], cp.vl["BODY_CONTROL_STATE"]["DOOR_OPEN_FR"],
                         cp.vl["BODY_CONTROL_STATE"]["DOOR_OPEN_RL"], cp.vl["BODY_CONTROL_STATE"]["DOOR_OPEN_RR"]])
@@ -54,6 +76,7 @@ class CarState(CarStateBase):
 
     ret.brakePressed = cp.vl["BRAKE_MODULE"]["BRAKE_PRESSED"] != 0
     ret.brakeHoldActive = cp.vl["ESP_CONTROL"]["BRAKE_HOLD_ACTIVE"] == 1
+    ret.brakeLights = bool(cp.vl["ESP_CONTROL"]["BRAKE_LIGHTS_ACC"])
     if self.CP.enableGasInterceptor:
       ret.gas = (cp.vl["GAS_SENSOR"]["INTERCEPTOR_GAS"] + cp.vl["GAS_SENSOR"]["INTERCEPTOR_GAS2"]) // 2
       ret.gasPressed = ret.gas > 805
@@ -75,6 +98,20 @@ class CarState(CarStateBase):
 
     ret.standstill = ret.vEgoRaw == 0
 
+    if self.CP.carFingerprint != CAR.PRIUS_V:
+      self.lta_status = cp_cam.vl["LKAS_HUD"]["SET_ME_X02"]
+      if ((self.prev_lta_status == 16 and self.lta_status == 0) or
+          (self.prev_lta_status == 0 and self.lta_status == 16)) and not self.lta_status_active:
+        self.lta_status_active = True
+      if self.prev_lta_status is None:
+        self.prev_lta_status = self.lta_status
+    if self.lta_status_active:
+      self.lkas_enabled = self.lta_status
+    elif self.CP.carFingerprint != CAR.PRIUS_V:
+      self.lkas_enabled = cp_cam.vl["LKAS_HUD"]["LKAS_STATUS"]
+    if self.prev_lkas_enabled is None:
+      self.prev_lkas_enabled = self.lkas_enabled
+
     ret.steeringAngleDeg = cp.vl["STEER_ANGLE_SENSOR"]["STEER_ANGLE"] + cp.vl["STEER_ANGLE_SENSOR"]["STEER_FRACTION"]
     torque_sensor_angle_deg = cp.vl["STEER_TORQUE_SENSOR"]["STEER_ANGLE"]
 
@@ -95,8 +132,8 @@ class CarState(CarStateBase):
 
     can_gear = int(cp.vl["GEAR_PACKET"]["GEAR"])
     ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(can_gear, None))
-    ret.leftBlinker = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 1
-    ret.rightBlinker = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 2
+    ret.leftBlinker = ret.leftBlinkerOn = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 1
+    ret.rightBlinker = ret.rightBlinkerOn = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 2
 
     ret.steeringTorque = cp.vl["STEER_TORQUE_SENSOR"]["STEER_TORQUE_DRIVER"]
     ret.steeringTorqueEps = cp.vl["STEER_TORQUE_SENSOR"]["STEER_TORQUE_EPS"] * self.eps_torque_scale
@@ -135,6 +172,13 @@ class CarState(CarStateBase):
         self.acc_type = cp_acc.vl["ACC_CONTROL"]["ACC_TYPE"]
       ret.stockFcw = bool(cp_acc.vl["PCS_HUD"]["FCW"])
 
+    if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
+      self.gap_dist_button = cp_cam.vl["ACC_CONTROL"]["DISTANCE"]
+    if self.CP.flags & ToyotaFlags.SMART_DSU:
+      self.gap_dist_button = cp.vl["SDSU"]["FD_BUTTON"]
+
+    self.follow_distance = cp.vl["PCM_CRUISE_2"]["PCM_FOLLOW_DISTANCE"]
+
     # some TSS2 cars have low speed lockout permanently set, so ignore on those cars
     # these cars are identified by an ACC_TYPE value of 2.
     # TODO: it is possible to avoid the lockout and gain stop and go if you
@@ -163,7 +207,88 @@ class CarState(CarStateBase):
     if self.CP.carFingerprint != CAR.PRIUS_V:
       self.lkas_hud = copy.copy(cp_cam.vl["LKAS_HUD"])
 
+    self._update_traffic_signals(cp_cam)
+    ret.cruiseState.speedLimit = self._calculate_speed_limit()
+
     return ret
+
+  def _init_traffic_signals(self):
+    self._tsgn1 = None
+    self._spdval1 = None
+    self._splsgn1 = None
+    self._tsgn2 = None
+    self._splsgn2 = None
+    self._tsgn3 = None
+    self._splsgn3 = None
+    self._tsgn4 = None
+    self._splsgn4 = None
+
+  def _update_traffic_signals(self, cp_cam):
+    # Print out car signals for traffic signal detection
+    tsgn1 = cp_cam.vl["RSA1"]['TSGN1']
+    spdval1 = cp_cam.vl["RSA1"]['SPDVAL1']
+    splsgn1 = cp_cam.vl["RSA1"]['SPLSGN1']
+    tsgn2 = cp_cam.vl["RSA1"]['TSGN2']
+    splsgn2 = cp_cam.vl["RSA1"]['SPLSGN2']
+    tsgn3 = cp_cam.vl["RSA2"]['TSGN3']
+    splsgn3 = cp_cam.vl["RSA2"]['SPLSGN3']
+    tsgn4 = cp_cam.vl["RSA2"]['TSGN4']
+    splsgn4 = cp_cam.vl["RSA2"]['SPLSGN4']
+
+    has_changed = tsgn1 != self._tsgn1 \
+      or spdval1 != self._spdval1 \
+      or splsgn1 != self._splsgn1 \
+      or tsgn2 != self._tsgn2 \
+      or splsgn2 != self._splsgn2 \
+      or tsgn3 != self._tsgn3 \
+      or splsgn3 != self._splsgn3 \
+      or tsgn4 != self._tsgn4 \
+      or splsgn4 != self._splsgn4
+
+    self._tsgn1 = tsgn1
+    self._spdval1 = spdval1
+    self._splsgn1 = splsgn1
+    self._tsgn2 = tsgn2
+    self._splsgn2 = splsgn2
+    self._tsgn3 = tsgn3
+    self._splsgn3 = splsgn3
+    self._tsgn4 = tsgn4
+    self._splsgn4 = splsgn4
+
+    if not has_changed:
+      return
+
+    print('---- TRAFFIC SIGNAL UPDATE -----')
+    if tsgn1 is not None and tsgn1 != 0:
+      print(f'TSGN1: {self._traffic_signal_description(tsgn1)}')
+    if spdval1 is not None and spdval1 != 0:
+      print(f'SPDVAL1: {spdval1}')
+    if splsgn1 is not None and splsgn1 != 0:
+      print(f'SPLSGN1: {splsgn1}')
+    if tsgn2 is not None and tsgn2 != 0:
+      print(f'TSGN2: {self._traffic_signal_description(tsgn2)}')
+    if splsgn2 is not None and splsgn2 != 0:
+      print(f'SPLSGN2: {splsgn2}')
+    if tsgn3 is not None and tsgn3 != 0:
+      print(f'TSGN3: {self._traffic_signal_description(tsgn3)}')
+    if splsgn3 is not None and splsgn3 != 0:
+      print(f'SPLSGN3: {splsgn3}')
+    if tsgn4 is not None and tsgn4 != 0:
+      print(f'TSGN4: {self._traffic_signal_description(tsgn4)}')
+    if splsgn4 is not None and splsgn4 != 0:
+      print(f'SPLSGN4: {splsgn4}')
+    print('------------------------')
+
+  def _traffic_signal_description(self, tsgn):
+    desc = _TRAFFIC_SINGAL_MAP.get(int(tsgn))
+    return f'{tsgn}: {desc}' if desc is not None else f'{tsgn}'
+
+  def _calculate_speed_limit(self):
+    if self._tsgn1 == 1:
+      return self._spdval1 * CV.KPH_TO_MS
+    if self._tsgn1 == 36:
+      return self._spdval1 * CV.MPH_TO_MS
+    return 0
 
   @staticmethod
   def get_can_parser(CP):
@@ -215,11 +340,19 @@ class CarState(CarStateBase):
         ("PRE_COLLISION", 33),
       ]
 
+    if CP.flags & ToyotaFlags.SMART_DSU:
+      messages.append(("SDSU", 33))
+
     return CANParser(DBC[CP.carFingerprint]["pt"], messages, 0)
 
   @staticmethod
   def get_cam_can_parser(CP):
     messages = []
+
+    messages += [
+      ("RSA1", 0),
+      ("RSA2", 0),
+    ]
 
     if CP.carFingerprint != CAR.PRIUS_V:
       messages += [

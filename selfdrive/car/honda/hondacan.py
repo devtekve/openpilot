@@ -33,8 +33,6 @@ def create_brake_command(packer, apply_brake, pump_on, pcm_override, pcm_cancel_
   pcm_fault_cmd = False
 
   values = {
-    "COMPUTER_BRAKE": apply_brake,
-    "BRAKE_PUMP_REQUEST": pump_on,
     "CRUISE_OVERRIDE": pcm_override,
     "CRUISE_FAULT_CMD": pcm_fault_cmd,
     "CRUISE_CANCEL_CMD": pcm_cancel_cmd,
@@ -47,6 +45,14 @@ def create_brake_command(packer, apply_brake, pump_on, pcm_override, pcm_cancel_
     "AEB_REQ_2": 0,
     "AEB_STATUS": 0,
   }
+
+  if car_fingerprint == CAR.CLARITY:
+    values["COMPUTER_BRAKE_ALT"] = apply_brake
+    values["BRAKE_PUMP_REQUEST_ALT"] = apply_brake > 0
+  else:
+    values["COMPUTER_BRAKE"] = apply_brake
+    values["BRAKE_PUMP_REQUEST"] = pump_on
+
   bus = get_pt_bus(car_fingerprint)
   return packer.make_can_msg("BRAKE_COMMAND", bus, values)
 
@@ -116,7 +122,7 @@ def create_bosch_supplemental_1(packer, car_fingerprint):
   return packer.make_can_msg("BOSCH_SUPPLEMENTAL_1", bus, values)
 
 
-def create_ui_commands(packer, CP, enabled, pcm_speed, hud, is_metric, acc_hud, lkas_hud):
+def create_ui_commands(packer, CP, enabled, pcm_speed, hud, is_metric, acc_hud, lkas_hud, lat_active, gac_tr):
   commands = []
   bus_pt = get_pt_bus(CP.carFingerprint)
   radar_disabled = CP.carFingerprint in (HONDA_BOSCH - HONDA_BOSCH_RADARLESS) and CP.openpilotLongitudinalControl
@@ -126,7 +132,7 @@ def create_ui_commands(packer, CP, enabled, pcm_speed, hud, is_metric, acc_hud, 
     acc_hud_values = {
       'CRUISE_SPEED': hud.v_cruise,
       'ENABLE_MINI_CAR': 1 if enabled else 0,
-      'HUD_DISTANCE': 0,  # max distance setting on display
+      'HUD_DISTANCE': gac_tr,  # max distance setting on display
       'IMPERIAL_UNIT': int(not is_metric),
       'HUD_LEAD': 2 if enabled and hud.lead_visible else 1 if enabled else 0,
       'SET_ME_X01_2': 1,
@@ -149,7 +155,8 @@ def create_ui_commands(packer, CP, enabled, pcm_speed, hud, is_metric, acc_hud, 
   lkas_hud_values = {
     'SET_ME_X41': 0x41,
     'STEERING_REQUIRED': hud.steer_required,
-    'SOLID_LANES': hud.lanes_visible,
+    'SOLID_LANES': lat_active,
+    'DASHED_LANES': hud.dashed_lanes,
     'BEEP': 0,
   }
 

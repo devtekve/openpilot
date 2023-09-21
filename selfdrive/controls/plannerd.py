@@ -38,11 +38,15 @@ def plannerd_thread(sm=None, pm=None):
 
   debug_mode = bool(int(os.getenv("DEBUG", "0")))
 
+  use_lanelines = False
+
+  cloudlog.event("e2e mode", on=use_lanelines)
+
   longitudinal_planner = LongitudinalPlanner(CP)
-  lateral_planner = LateralPlanner(CP, debug=debug_mode)
+  lateral_planner = LateralPlanner(CP, debug=debug_mode, use_lanelines=use_lanelines)
 
   if sm is None:
-    sm = messaging.SubMaster(['carControl', 'carState', 'controlsState', 'radarState', 'modelV2'],
+    sm = messaging.SubMaster(['carControl', 'carState', 'controlsState', 'radarState', 'modelV2', 'longitudinalPlan', 'lateralPlan', 'liveMapData', 'navInstruction', 'e2eLongState'],
                              poll=['radarState', 'modelV2'], ignore_avg_freq=['radarState'])
 
   if pm is None:
