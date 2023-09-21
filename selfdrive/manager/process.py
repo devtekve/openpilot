@@ -48,11 +48,19 @@ def launcher(proc: str, name: str) -> None:
 
 
 def nativelauncher(pargs: List[str], cwd: str, name: str) -> None:
-  os.environ['MANAGER_DAEMON'] = name
+  try:
+    os.environ['MANAGER_DAEMON'] = name
 
-  # exec the process
-  os.chdir(cwd)
-  os.execvp(pargs[0], pargs)
+    # change the current working directory
+    os.chdir(cwd)
+
+    # exec the process
+    os.execvp(pargs[0], pargs)
+
+  except FileNotFoundError as e:
+    print(f"Error when trying to execute the program '{pargs[0]}' with arguments {pargs[1:]}")
+    print(f"Error was received when changing directory to '{cwd}'")
+    print(f"Complete error: {e}")
 
 
 def join_process(process: Process, timeout: float) -> None:
