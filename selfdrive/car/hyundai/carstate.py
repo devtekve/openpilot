@@ -373,21 +373,29 @@ class CarState(CarStateBase):
       ("LKAS11", 100)
     ]
 
-    if not CP.openpilotLongitudinalControl and CP.carFingerprint in (CAMERA_SCC_CAR | (NON_SCC_CAR - NON_SCC_NO_FCA_CAR - NON_SCC_RADAR_FCA_CAR)):
-      if CP.carFingerprint in CAMERA_SCC_CAR:
-        messages += [
-          ("SCC11", 50),
-          ("SCC12", 50),
-        ]
+    if CP.openpilotLongitudinalControl and CP.sccBus == 2:
+      messages += [
+        ("SCC11", 50),
+        ("SCC12", 50),
+      ]
 
       if CP.flags & HyundaiFlags.USE_FCA.value:
         messages.append(("FCA11", 50))
 
-    if CP.openpilotLongitudinalControl and CP.carFingerprint in CAMERA_SCC_CAR:
       if CP.flags & HyundaiFlags.USE_FCA.value:
         messages += [
           ("FCA11", 50),
           ("FCA12", 50),
+        ]
+
+      if CP.scc13Available:
+        messages += [
+          ("SCC13", 50),
+        ]
+
+      if CP.scc14Available:
+        messages += [
+          ("SCC14", 50),
         ]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], messages, 2)
