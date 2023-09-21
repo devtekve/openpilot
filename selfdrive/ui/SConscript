@@ -25,8 +25,8 @@ widgets_src = ["ui.cc", "qt/widgets/input.cc", "qt/widgets/drive_stats.cc", "qt/
                "qt/widgets/ssh_keys.cc", "qt/widgets/toggle.cc", "qt/widgets/controls.cc",
                "qt/widgets/offroad_alerts.cc", "qt/widgets/prime.cc", "qt/widgets/keyboard.cc",
                "qt/widgets/scrollview.cc", "qt/widgets/cameraview.cc", "#third_party/qrcode/QrCode.cc",
-               "qt/request_repeater.cc", "qt/qt_window.cc", "qt/network/networking.cc", "qt/network/wifi_manager.cc"]
-               #,"qt/offroad/sunnypilot_settings.cc"]
+               "qt/request_repeater.cc", "qt/qt_window.cc", "qt/network/networking.cc", "qt/network/wifi_manager.cc"
+               ,"qt/offroad/sunnypilot_settings.cc"]
 
 qt_env['CPPDEFINES'] = []
 if maps:
@@ -86,11 +86,11 @@ qt_env.Program("qt/spinner", ["qt/spinner.cc"], LIBS=qt_libs)
 
 # build main UI
 # include dashcam / screenrecorder
-if screenrecorder:
-  qt_src += ["qt/screenrecorder/screenrecorder.cc", "qt/screenrecorder/omx_encoder.cc"]
-  qt_env['CPPPATH'] += ["qt/screenrecorder/openmax/include/"]
-  qt_libs += ['OmxCore', 'gsl', 'CB', 'avformat', 'avcodec', 'swscale', 'avutil', 'yuv', 'pthread']
-  qt_env['CPPDEFINES'] += ["ENABLE_DASHCAM"]
+#if screenrecorder:
+#  qt_src += ["qt/screenrecorder/screenrecorder.cc", "qt/screenrecorder/omx_encoder.cc"]
+#  qt_env['CPPPATH'] += ["qt/screenrecorder/openmax/include/"]
+#  qt_libs += ['OmxCore', 'gsl', 'CB', 'avformat', 'avcodec', 'swscale', 'avutil', 'yuv', 'pthread']
+#  qt_env['CPPDEFINES'] += ["ENABLE_DASHCAM"]
 
 qt_env.Program("_ui", qt_src + [asset_obj], LIBS=qt_libs)
 if GetOption('extras'):

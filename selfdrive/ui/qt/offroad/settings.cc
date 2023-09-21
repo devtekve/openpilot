@@ -22,6 +22,7 @@
 #include "selfdrive/ui/ui.h"
 #include "selfdrive/ui/qt/util.h"
 #include "selfdrive/ui/qt/qt_window.h"
+#include "selfdrive/ui/qt/offroad/sunnypilot_settings.h"
 
 TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // param, title, desc, icon
@@ -383,6 +384,10 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {tr("Network"), new Networking(this)},
     {tr("Toggles"), toggles},
     {tr("Software"), new SoftwarePanel(this)},
+    {tr("SP - General"), new SPGeneralPanel(this)},
+    {tr("SP - Controls"), new SPControlsPanel(this)},
+    {tr("SP - Vehicles"), new SPVehiclesPanel(this)},
+    {tr("SP - Visuals"), new SPVisualsPanel(this)},
   };
 
   nav_btns = new QButtonGroup(this);
@@ -395,7 +400,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
         color: grey;
         border: none;
         background: none;
-        font-size: 65px;
+        font-size: 50px;
         font-weight: 500;
       }
       QPushButton:checked {
