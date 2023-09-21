@@ -280,6 +280,11 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"HkgSmoothStop", CLEAR_ON_MANAGER_START},
     {"EnforceTorqueLateral", CLEAR_ON_MANAGER_START},
     {"OsmWayTest", CLEAR_ON_MANAGER_START},
+    {"ReverseDmCam", CLEAR_ON_MANAGER_START},
+    {"CustomStockLong", CLEAR_ON_MANAGER_START},
+    {"RoadEdge", CLEAR_ON_MANAGER_START},
+    {"LiveTorque", CLEAR_ON_MANAGER_START},
+    {"DynamicLongitudinalControl", CLEAR_ON_MANAGER_START},
 };
 
 } // namespace
