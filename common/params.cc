@@ -273,7 +273,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"TurnVisionControl", CLEAR_ON_MANAGER_START},
     {"VisionCurveLaneless", CLEAR_ON_MANAGER_START},
     {"VwAccType", CLEAR_ON_MANAGER_START},
-    {"HotspotOnBoot", CLEAR_ON_MANAGER_START}
+    {"HotspotOnBoot", CLEAR_ON_MANAGER_START},
+    {"DriverCameraHardwareMissing", CLEAR_ON_MANAGER_START},
 };
 
 } // namespace
