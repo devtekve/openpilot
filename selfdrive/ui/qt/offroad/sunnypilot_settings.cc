@@ -301,6 +301,9 @@ SPControlsPanel::SPControlsPanel(QWidget* parent) : QWidget(parent) {
 
   main_layout->addWidget(new AutoLaneChangeTimer());
 
+  ParamControl *roadEdge = new ParamControl("RoadEdge", "Block Lane Change: Road Edge Detection", "Enable this toggle to block lane change when road edge is detected.", "../assets/offroad/icon_openpilot.png");
+  main_layout->addWidget(roadEdge);
+
   ParamControl *customOffsets = new ParamControl("CustomOffsets",
                                                  "Custom Offsets",
                                                  "Add custom offsets to Camera and Path in sunnypilot.",
@@ -347,6 +350,8 @@ SPControlsPanel::SPControlsPanel(QWidget* parent) : QWidget(parent) {
   if (!Params().getBool("GapAdjustCruise"))
     gacMain->hide();
 
+  ParamControl *enforceTorqueLateral = new ParamControl("EnforceTorqueLateral", "Enforce Torque Lateral Control", "Enable this to enforce sunnypilot to steer with Torque lateral control.", "../assets/offroad/icon_calibration.png");
+
   ParamControl *customTorqueLateral = new ParamControl("CustomTorqueLateral",
                                                        "Torque Lateral Control Live Tune",
                                                        "Enables live tune for Torque lateral control.",
@@ -367,8 +372,28 @@ SPControlsPanel::SPControlsPanel(QWidget* parent) : QWidget(parent) {
     }
   });
 
+  ParamControl *liveTorque = new ParamControl("LiveTorque", "Torque Lateral Controller Self-Tune", "Enables self-tune for Torque lateral control.", "../assets/offroad/icon_calibration.png");
+
+  main_layout->addWidget(enforceTorqueLateral);
   main_layout->addWidget(customTorqueLateral);
   main_layout->addWidget(customTorqueMain);
+  main_layout->addWidget(liveTorque);
+
+  QObject::connect(enforceTorqueLateral, &ToggleControl::toggleFlipped, [=](bool state) {
+    if (state) {
+      customTorqueLateral->show();
+      liveTorque->show();
+    } else {
+      customTorqueLateral->hide();
+      liveTorque->hide();
+    }
+  });
+
+  if (!Params().getBool("EnforceTorqueLateral"))
+  {
+    customTorqueLateral->hide();
+    liveTorque->hide();
+  }
 
   if (!Params().getBool("CustomTorqueLateral"))
     customTorqueMain->hide();
@@ -435,8 +460,8 @@ SPControlsPanel::SPControlsPanel(QWidget* parent) : QWidget(parent) {
                                           "../assets/offroad/icon_openpilot.png"));
 
   main_layout->addWidget(new ParamControl("ReverseAccChange",
-                                          "ACC +/-: Short=5, Long=1",
-                                          "Change the ACC +/- buttons behavior with cruise speed change in openpilot.\nDisabled (Stock):  Short=1, Long=5\nEnabled:  Short=5, Long=1",
+                                          "ACC +/-: Long Press Reverse",
+                                          "Change the ACC +/- buttons behavior with cruise speed change in sunnypilot. <br/>Disabled (Stock): Short=1, Long = 5 (imperial) / 10 (metric)",
                                           "../assets/offroad/icon_acc_change.png"));
 }
 
