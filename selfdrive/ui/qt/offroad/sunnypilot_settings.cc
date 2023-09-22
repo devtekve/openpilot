@@ -91,20 +91,20 @@ SPGeneralPanel::SPGeneralPanel(QWidget* parent) : QWidget(parent) {
                                           "Quiet Drive 🤫",
                                           "sunnypilot will display alerts but only play the most important warning sounds. This feature can be toggled while the car is on.",
                                           "../assets/offroad/icon_mute.png"));
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("PrebuiltOn",
                                           "Fast Boot (Prebuilt)",
                                           "sunnypilot will fast boot by creating a Prebuilt file. Note: Turn off this feature if you have made any UI changes!",
                                           "../assets/offroad/icon_shell.png"));
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new MaxTimeOffroad());
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new OnroadScreenOff());
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new OnroadScreenOffBrightness());
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new BrightnessControl());
-//  main_layout->addWidget(horizontal_line());
+
   ParamControl *uploadRaw = new ParamControl("UploadRaw",
                                              "Upload Raw Logs",
                                              "Upload full logs and full resolution video by default while on Wi-Fi. If not enabled, individual logs can be marked for upload at useradmin.comma.ai.",
@@ -129,32 +129,32 @@ SPGeneralPanel::SPGeneralPanel(QWidget* parent) : QWidget(parent) {
 
   if (!Params().getBool("UploadRaw"))
     uploadRawMain->hide();
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("EnableUpdates",
                                           "Enable Updates",
                                           "Enable this toggle to receive updates for sunnypilot.",
                                           "../assets/offroad/icon_network.png"));
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("DisableOnroadUploads",
                                           "Disable Onroad Uploads",
                                           "Disable uploads completely when onroad. Necessary to avoid high data usage when connected to Wi-Fi hotspot. Turn on this feature if you are looking to utilize map-based features, such as Speed Limit Control (SLC) and Map-based Turn Speed Control (MTSC).",
                                           "../assets/offroad/icon_network.png"));
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("ProcessNotRunningOff",
                                           "Bypass \"System Malfunction\" Error",
                                           "Prevent sunnypilot from returning the \"System Malfunction\" alert that hinders the ability use sunnypilot. Turn on this feature if you experience this alert frequently.",
                                           "../assets/offroad/icon_shell.png"));
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("ControlsdLaggingOff",
                                           "Bypass \"Controls Process Lagging\" Error",
                                           "Prevent sunnypilot from returning the \"Controls Process Lagging\" alert that hinders the ability use sunnypilot. Turn on this feature if you experience this alert frequently.",
                                           "../assets/offroad/icon_shell.png"));
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("CommIssueOff",
                                           "Bypass \"Communication Issue\" Error",
                                           "Prevent sunnypilot from returning the \"Communication Issue between Processes\" alert that hinders the ability use sunnypilot. Turn on this feature if you experience this alert frequently.",
                                           "../assets/offroad/icon_shell.png"));
-//  main_layout->addWidget(horizontal_line());
+
   ParamControl *noOffroadFix = new ParamControl("NoOffroadFix",
                                                 "Fix sunnypilot No Offroad",
                                                 "Enforce sunnypilot to go offroad and turns off after shutting down the car. This feature fixes non-official devices running sunnypilot without comma power.\nOnly enable this feature if your comma device does not shut down after the car is turned off.",
@@ -165,7 +165,7 @@ SPGeneralPanel::SPGeneralPanel(QWidget* parent) : QWidget(parent) {
     }
   });
   main_layout->addWidget(noOffroadFix);
-//  main_layout->addWidget(horizontal_line());
+
   ParamControl *timeValidBypass = new ParamControl("TimeValidBypass",
                                                    "Bypass Time and Date Check",
                                                    "Disable sunnypilot to perform time and date check. This feature allows your device to bypass the time and date check to use sunnypilot.\nOnly enable this feature if your device does not engage without the time and date check.",
@@ -176,7 +176,7 @@ SPGeneralPanel::SPGeneralPanel(QWidget* parent) : QWidget(parent) {
     }
   });
   main_layout->addWidget(timeValidBypass);
-//  main_layout->addWidget(horizontal_line());
+
   ParamControl *noGps = new ParamControl("noGps",
                                          "Bypass GPS Check",
                                          "Disable GPS check on sunnypilot. This feature allows your device to bypass the GPS check to use sunnypilot.\nOnly enable this feature if your device does not have a GPS chip.",
@@ -187,12 +187,12 @@ SPGeneralPanel::SPGeneralPanel(QWidget* parent) : QWidget(parent) {
     }
   });
   main_layout->addWidget(noGps);
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("EnableDebugSnapshot",
                                           "Debug snapshot on screen center tap",
                                           "Stores snapshot file with current state of some modules.",
                                           "../assets/offroad/icon_calibration.png"));
-//  main_layout->addWidget(horizontal_line());
+
   ParamControl *customMapbox = new ParamControl("CustomMapbox",
                                                 "Enable Mapbox Navigation",
                                                 "Enable this will allow non-comma-Prime users to use Mapbox navigation on applicable comma devices.\nLearn more in sunnyhaibin's Discord server https://discord.gg/wRW3meAgtx",
@@ -298,9 +298,9 @@ SPControlsPanel::SPControlsPanel(QWidget* parent) : QWidget(parent) {
   main_layout->addWidget(dlpControl);
   main_layout->addWidget(dlpMain);
 
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new AutoLaneChangeTimer());
-//  main_layout->addWidget(horizontal_line());
+
   ParamControl *customOffsets = new ParamControl("CustomOffsets",
                                                  "Custom Offsets",
                                                  "Add custom offsets to Camera and Path in sunnypilot.",
@@ -324,7 +324,7 @@ SPControlsPanel::SPControlsPanel(QWidget* parent) : QWidget(parent) {
 
   if (!Params().getBool("CustomOffsets"))
     customOffsetsMain->hide();
-//  main_layout->addWidget(horizontal_line());
+
   ParamControl *gapAdjustCruise = new ParamControl("GapAdjustCruise",
                                                    "Enable Gap Adjust Cruise*",
                                                    "Enable the Interval button on the steering wheel to adjust the cruise gap.\n*Only available to cars with openpilot Longitudinal Control*",
@@ -346,7 +346,7 @@ SPControlsPanel::SPControlsPanel(QWidget* parent) : QWidget(parent) {
 
   if (!Params().getBool("GapAdjustCruise"))
     gacMain->hide();
-//  main_layout->addWidget(horizontal_line());
+
   ParamControl *customTorqueLateral = new ParamControl("CustomTorqueLateral",
                                                        "Torque Lateral Control Live Tune",
                                                        "Enables live tune for Torque lateral control.",
@@ -373,17 +373,17 @@ SPControlsPanel::SPControlsPanel(QWidget* parent) : QWidget(parent) {
   if (!Params().getBool("CustomTorqueLateral"))
     customTorqueMain->hide();
 
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("HandsOnWheelMonitoring",
                                           "Enable Hands on Wheel Monitoring",
                                           "Monitor and alert when driver is not keeping the hands on the steering wheel.",
                                           "../assets/offroad/icon_openpilot.png"));
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("VisionTurnSpeedControl",
                                           "Enable Vision Based Turn Speed Control (V-TSC)",
                                           "Use vision path predictions to estimate the appropriate speed to drive through turns ahead.",
                                           "../assets/offroad/icon_road.png"));
-//  main_layout->addWidget(horizontal_line());
+
   ParamControl *speedLimitControl = new ParamControl("SpeedLimitControl",
                                                      "Enable Speed Limit Control (SLC)",
                                                      "Use speed limit signs information from map data and car interface (if applicable) to automatically adapt cruise speed to road limits.",
@@ -428,12 +428,12 @@ SPControlsPanel::SPControlsPanel(QWidget* parent) : QWidget(parent) {
 
   if (!Params().getBool("SpeedLimitControl"))
     speedLimitMain->hide();
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("MapTurnSpeedControl",
                                           "Enable Map Data Turn Speed Control (M-TSC)",
                                           "Use curvature information from map data to define speed limits to take turns ahead.",
                                           "../assets/offroad/icon_openpilot.png"));
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("ReverseAccChange",
                                           "ACC +/-: Short=5, Long=1",
                                           "Change the ACC +/- buttons behavior with cruise speed change in openpilot.\nDisabled (Stock):  Short=1, Long=5\nEnabled:  Short=5, Long=1",
@@ -554,17 +554,17 @@ SPVisualsPanel::SPVisualsPanel(QWidget* parent) : QWidget(parent) {
 
   if (!Params().getBool("DevUI"))
     devUiMain->hide();
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("BrakeLights",
                                           "Display Braking Status",
                                           "Enable this will turn the current speed value to red while the brake is used.",
                                           "../assets/offroad/icon_road.png"));
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("StandStillTimer",
                                           "Display Stand Still Timer",
                                           "Enable this will display time spent at a stop (i.e., at a stop lights, stop signs, traffic congestions).",
                                           "../assets/offroad/icon_road.png"));
-//  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new ParamControl("ShowDebugUI",
                                           "Show debug UI elements",
                                           "Show UI elements that aid debugging.",
