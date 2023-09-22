@@ -115,8 +115,8 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"DisableUpdates", PERSISTENT},
     {"DisengageOnAccelerator", PERSISTENT},
     {"DmModelInitialized", CLEAR_ON_ONROAD_TRANSITION},
-    {"DongleId", PERSISTENT}, // NO LONGER PRESENT
-    {"DoReboot", CLEAR_ON_MANAGER_START}, // NO LONGER PRESENT
+    {"DongleId", PERSISTENT},
+    {"DoReboot", CLEAR_ON_MANAGER_START},
     {"DoShutdown", CLEAR_ON_MANAGER_START},
     {"DoUninstall", CLEAR_ON_MANAGER_START},
     {"ExperimentalLongitudinalEnabled", PERSISTENT},
@@ -135,17 +135,17 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"GsmRoaming", PERSISTENT},
     {"HardwareSerial", PERSISTENT},
     {"HasAcceptedTerms", PERSISTENT},
-    {"IMEI", PERSISTENT}, // NO LONGER PRESENT
+    {"IMEI", PERSISTENT},
     {"InstallDate", PERSISTENT},
     {"IsDriverViewEnabled", CLEAR_ON_MANAGER_START},
     {"IsEngaged", PERSISTENT},
     {"IsLdwEnabled", PERSISTENT},
-    {"IsMetric", PERSISTENT}, // NO LONGER PRESENT
+    {"IsMetric", PERSISTENT},
     {"IsOffroad", CLEAR_ON_MANAGER_START},
-    {"IsOnroad", PERSISTENT}, // NO LONGER PRESENT
+    {"IsOnroad", PERSISTENT},
     {"IsRhdDetected", PERSISTENT},
     {"IsReleaseBranch", CLEAR_ON_MANAGER_START},
-    {"IsTakingSnapshot", CLEAR_ON_MANAGER_START}, // NO LONGER PRESENT
+    {"IsTakingSnapshot", CLEAR_ON_MANAGER_START},
     {"IsTestedBranch", CLEAR_ON_MANAGER_START},
     {"IsUpdateAvailable", CLEAR_ON_MANAGER_START},
     {"JoystickDebugMode", CLEAR_ON_MANAGER_START | CLEAR_ON_OFFROAD_TRANSITION},
@@ -198,10 +198,10 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"SshEnabled", PERSISTENT},
     {"SubscriberInfo", PERSISTENT},
     {"TermsVersion", PERSISTENT},
-    {"Timezone", PERSISTENT}, // NO LONGER PRESENT
-    {"TrainingVersion", PERSISTENT}, // NO LONGER PRESENT
+    {"Timezone", PERSISTENT},
+    {"TrainingVersion", PERSISTENT},
     {"UbloxAvailable", PERSISTENT},
-    {"UpdateAvailable", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION}, // NO LONGER PRESENT
+    {"UpdateAvailable", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION},
     {"UpdateFailedCount", CLEAR_ON_MANAGER_START},
     {"UpdaterAvailableBranches", CLEAR_ON_MANAGER_START},
     {"UpdaterCurrentDescription", CLEAR_ON_MANAGER_START},
@@ -211,7 +211,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"UpdaterNewReleaseNotes", CLEAR_ON_MANAGER_START},
     {"UpdaterState", CLEAR_ON_MANAGER_START},
     {"UpdaterTargetBranch", CLEAR_ON_MANAGER_START},
-    {"Version", PERSISTENT}, // NO LONGER PRESENT
+    {"Version", PERSISTENT},
     {"VisionRadarToggle", PERSISTENT},
     {"WheeledBody", PERSISTENT},
 
@@ -225,13 +225,13 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"CameraControl", CLEAR_ON_MANAGER_START},
     {"CameraControlToggle", CLEAR_ON_MANAGER_START},
     {"CameraOffset", CLEAR_ON_MANAGER_START},
-    {"CarModel", CLEAR_ON_MANAGER_START}, // NO LONGER PRESENT
+    {"CarModel", PERSISTENT},
     {"CarModelText", CLEAR_ON_MANAGER_START},
     {"ChevronInfo", CLEAR_ON_MANAGER_START},
     {"MadsCruiseMain", CLEAR_ON_MANAGER_START},
     {"CustomBootScreen", CLEAR_ON_MANAGER_START},
     {"CustomOffsets", CLEAR_ON_MANAGER_START},
-    {"DevUI", CLEAR_ON_MANAGER_START}, // NO LONGER PRESENT
+    {"DevUI", CLEAR_ON_MANAGER_START},
     {"DevUIInfo", CLEAR_ON_MANAGER_START},
     {"DisableOnroadUploads", CLEAR_ON_MANAGER_START},
     {"DisengageLateralOnBrake", CLEAR_ON_MANAGER_START},
@@ -285,30 +285,30 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"RoadEdge", CLEAR_ON_MANAGER_START},
     {"LiveTorque", CLEAR_ON_MANAGER_START},
     {"DynamicLongitudinalControl", CLEAR_ON_MANAGER_START},
-    {"ButtonAutoHide", PERSISTENT}, // NEWLY DISCOVERED
-    {"CustomMapboxTokenPk", PERSISTENT}, // NEWLY DISCOVERED
-    {"CustomMapboxTokenSk", PERSISTENT}, // NEWLY DISCOVERED
-    {"DynamicLongitudinalControlToggle", PERSISTENT}, // NEWLY DISCOVERED
-    {"EnableAmap", PERSISTENT}, // NEWLY DISCOVERED
-    {"EnableDebugSnapshot", PERSISTENT}, // NEWLY DISCOVERED
-    {"EnableGmap", PERSISTENT}, // NEWLY DISCOVERED
-    {"EndToEndLongAlertLead", PERSISTENT}, // NEWLY DISCOVERED
-    {"EndToEndLongAlertLight", PERSISTENT}, // NEWLY DISCOVERED
-    {"EndToEndLongAlertUI", PERSISTENT}, // NEWLY DISCOVERED
-    {"EndToEndLongToggle", PERSISTENT}, // NEWLY DISCOVERED
-    {"FleetManagerPin", PERSISTENT}, // NEWLY DISCOVERED
-    {"MapboxFullScreen", PERSISTENT}, // NEWLY DISCOVERED
-    {"Offroad_SupersededUpdate", PERSISTENT}, // NEWLY DISCOVERED
-    {"OsmDbUpdatesCheck", PERSISTENT}, // NEWLY DISCOVERED
-    {"OsmLocationName", PERSISTENT}, // NEWLY DISCOVERED
-    {"OsmLocationTitle", PERSISTENT}, // NEWLY DISCOVERED
-    {"OsmLocationUrl", PERSISTENT}, // NEWLY DISCOVERED
-    {"QuietDrive", PERSISTENT}, // NEWLY DISCOVERED
-    {"SidebarTemperature", PERSISTENT}, // NEWLY DISCOVERED
-    {"SidebarTemperatureOptions", PERSISTENT}, // NEWLY DISCOVERED
-    {"ToyotaTSS2Long", PERSISTENT}, // NEWLY DISCOVERED
-    {"UpdateFailedCount", PERSISTENT}, // NEWLY DISCOVERED
-    {"LastCarModel", PERSISTENT}, // NEWLY DISCOVERED
+    {"ButtonAutoHide", PERSISTENT},
+    {"CustomMapboxTokenPk", PERSISTENT},
+    {"CustomMapboxTokenSk", PERSISTENT},
+    {"DynamicLongitudinalControlToggle", PERSISTENT},
+    {"EnableAmap", PERSISTENT},
+    {"EnableDebugSnapshot", PERSISTENT},
+    {"EnableGmap", PERSISTENT},
+    {"EndToEndLongAlertLead", PERSISTENT},
+    {"EndToEndLongAlertLight", PERSISTENT},
+    {"EndToEndLongAlertUI", PERSISTENT},
+    {"EndToEndLongToggle", PERSISTENT},
+    {"FleetManagerPin", PERSISTENT},
+    {"MapboxFullScreen", PERSISTENT},
+    {"Offroad_SupersededUpdate", PERSISTENT},
+    {"OsmDbUpdatesCheck", PERSISTENT},
+    {"OsmLocationName", PERSISTENT},
+    {"OsmLocationTitle", PERSISTENT},
+    {"OsmLocationUrl", PERSISTENT},
+    {"QuietDrive", PERSISTENT},
+    {"SidebarTemperature", PERSISTENT},
+    {"SidebarTemperatureOptions", PERSISTENT},
+    {"ToyotaTSS2Long", PERSISTENT},
+    {"UpdateFailedCount", PERSISTENT},
+    {"LastCarModel", PERSISTENT},
 };
 
 } // namespace
