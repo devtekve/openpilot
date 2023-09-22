@@ -237,7 +237,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"DisengageLateralOnBrake", CLEAR_ON_MANAGER_START},
     {"DynamicLaneProfile", CLEAR_ON_MANAGER_START},
     {"DynamicLaneProfileToggle", CLEAR_ON_MANAGER_START},
-    {"EnableMads", CLEAR_ON_MANAGER_START},
+    {"EnableMads", PERSISTENT},
     {"EnhancedScc", CLEAR_ON_MANAGER_START},
     {"GapAdjustCruise", CLEAR_ON_MANAGER_START},
     {"GapAdjustCruiseMax", CLEAR_ON_MANAGER_START},
