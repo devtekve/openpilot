@@ -9,7 +9,8 @@ from typing import Any, Dict, Optional, Tuple, List, Callable
 from cereal import car
 from openpilot.common.basedir import BASEDIR
 from openpilot.common.conversions import Conversions as CV
-from openpilot.common.kalman.simple_kalman import KF1D, get_kalman_gain
+from openpilot.common.kalman.simple_kalman import get_kalman_gain
+from openpilot.common.kalman.simple_kalman_impl import KF1D
 from openpilot.common.numpy_fast import clip
 from openpilot.common.params_pyx import Params, put_nonblocking, put_bool_nonblocking
 from openpilot.common.realtime import DT_CTRL
@@ -280,7 +281,7 @@ class CarInterfaceBase(ABC):
     if cs_out.seatbeltUnlatched and cs_out.gearShifter != GearShifter.park:
       events.add(EventName.seatbeltNotLatched)
     if cs_out.gearShifter != GearShifter.drive and cs_out.gearShifter not in extra_gears and not \
-            (cs_out.gearShifter == GearShifter.unknown and self.gear_warning < int(0.5/DT_CTRL)):
+      (cs_out.gearShifter == GearShifter.unknown and self.gear_warning < int(0.5/DT_CTRL)):
       if cs_out.vEgo < 5:
         events.add(EventName.silentWrongGear)
       else:
@@ -411,7 +412,7 @@ class CarInterfaceBase(ABC):
 
   def get_sp_common_state(self, cs_out, CS, min_enable_speed_pcm=False, gear_allowed=True, gap_button=False):
     cs_out.cruiseState.enabled = CS.accEnabled if not self.CP.pcmCruise or not self.CP.pcmCruiseSpeed or min_enable_speed_pcm else \
-                                 cs_out.cruiseState.enabled
+      cs_out.cruiseState.enabled
 
     if not self.enable_mads:
       if cs_out.cruiseState.enabled and not CS.out.cruiseState.enabled:
