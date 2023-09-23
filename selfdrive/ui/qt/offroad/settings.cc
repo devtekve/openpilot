@@ -355,18 +355,18 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
   QPushButton *close_btn = new QPushButton(tr("×"));
   close_btn->setStyleSheet(R"(
     QPushButton {
-      font-size: 140px;
-      padding-bottom: 20px;
-      border 1px grey solid;
-      border-radius: 100px;
+      font-size: 80px;
+      padding-bottom: 10px;
+      border: 4px solid grey;
       background-color: #292929;
       font-weight: 400;
     }
-    QPushButton:pressed {
+    QPushButton:pressed, QPushButton:hover, QPushButton:focus {
+      border: 4px solid grey;
       background-color: #3B3B3B;
     }
   )");
-  close_btn->setFixedSize(200, 200);
+  close_btn->setFixedSize(170, 100);
   sidebar_layout->addSpacing(45);
   sidebar_layout->addWidget(close_btn, 0, Qt::AlignCenter);
   QObject::connect(close_btn, &QPushButton::clicked, this, &SettingsWindow::closeSettings);
