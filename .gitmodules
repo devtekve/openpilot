@@ -1,9 +1,11 @@
 [submodule "panda"]
   path = panda
   url = ../panda.git
+  branch = master-with-sunny
 [submodule "opendbc"]
   path = opendbc
-  url = https://github.com/sunnyhaibin/opendbc.git
+  url = ../opendbc.git
+  branch = master-with-sunny
 [submodule "laika_repo"]
   path = laika_repo
   url = ../../commaai/laika.git
@@ -17,5 +19,5 @@
   path = tinygrad_repo
   url = https://github.com/geohot/tinygrad.git
 [submodule "cereal"]
-	path = cereal
-	url = https://github.com/sunnyhaibin/cereal.git
+  path = cereal
+  url = ../cereal.git
