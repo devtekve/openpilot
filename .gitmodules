@@ -21,3 +21,4 @@
 [submodule "cereal"]
   path = cereal
   url = ../cereal.git
+  branch = master-with-sunny
