@@ -107,12 +107,8 @@ class CarInterfaceBase(ABC):
     self.experimental_mode = self.param_s.get_bool("ExperimentalMode")
     self._frame = 0
     self.op_lookup = {"+": operator.add, "-": operator.sub}
-    self.gac = self.param_s.get_bool("GapAdjustCruise")
-    self.gac_mode = round(float(self.param_s.get("GapAdjustCruiseMode", encoding="utf8")))
     self.prev_gac_button = False
     self.gac_button_counter = 0
-    self.gac_min = -1
-    self.gac_max = -1
     self.reverse_dm_cam = self.param_s.get_bool("ReverseDmCam")
     self.mads_main_toggle = self.param_s.get_bool("MadsCruiseMain")
     self.lkas_toggle = self.param_s.get_bool("LkasToggle")
@@ -281,7 +277,7 @@ class CarInterfaceBase(ABC):
     if cs_out.seatbeltUnlatched and cs_out.gearShifter != GearShifter.park:
       events.add(EventName.seatbeltNotLatched)
     if cs_out.gearShifter != GearShifter.drive and cs_out.gearShifter not in extra_gears and not \
-      (cs_out.gearShifter == GearShifter.unknown and self.gear_warning < int(0.5/DT_CTRL)):
+            (cs_out.gearShifter == GearShifter.unknown and self.gear_warning < int(0.5/DT_CTRL)):
       if cs_out.vEgo < 5:
         events.add(EventName.silentWrongGear)
       else:
@@ -412,7 +408,7 @@ class CarInterfaceBase(ABC):
 
   def get_sp_common_state(self, cs_out, CS, min_enable_speed_pcm=False, gear_allowed=True, gap_button=False):
     cs_out.cruiseState.enabled = CS.accEnabled if not self.CP.pcmCruise or not self.CP.pcmCruiseSpeed or min_enable_speed_pcm else \
-      cs_out.cruiseState.enabled
+                                 cs_out.cruiseState.enabled
 
     if not self.enable_mads:
       if cs_out.cruiseState.enabled and not CS.out.cruiseState.enabled:
@@ -476,27 +472,21 @@ class CarInterfaceBase(ABC):
     return next((key for key, value in gac_dict.items() if value == gac_tr), gac_max)
 
   def toggle_gac(self, cs_out, CS, gac_button, gac_min, gac_max, gac_default, inc_dec):
-    if not self.CP.openpilotLongitudinalControl or not self.gac:
-      cs_out.gapAdjustCruiseTr = 4
-      CS.gac_tr = gac_default
+    if not self.CP.openpilotLongitudinalControl:
+      CS.gac_tr = 2
+      CS.gac_tr_cluster = gac_default
+      put_nonblocking("LongitudinalPersonality", 2)
       return cs_out, CS
-    if self.gac_min != gac_min:
-      self.gac_min = gac_min
-      put_nonblocking("GapAdjustCruiseMin", str(self.gac_min))
-    if self.gac_max != gac_max:
-      self.gac_max = gac_max
-      put_nonblocking("GapAdjustCruiseMax", str(self.gac_max))
-    if self.gac_mode in (0, 2):
-      if gac_button:
-        self.gac_button_counter += 1
-      elif self.prev_gac_button and not gac_button and self.gac_button_counter < 50:
-        self.gac_button_counter = 0
-        CS.gac_tr = self.get_sp_gac_state(CS.gac_tr, gac_min, gac_max, inc_dec)
-        put_nonblocking("GapAdjustCruiseTr", str(CS.gac_tr))
-      else:
-        self.gac_button_counter = 0
+    if gac_button:
+      self.gac_button_counter += 1
+    elif self.prev_gac_button and not gac_button and self.gac_button_counter < 50:
+      self.gac_button_counter = 0
+      CS.gac_tr = self.get_sp_gac_state(CS.gac_tr, 0, 2, inc_dec)
+      put_nonblocking("LongitudinalPersonality", str(CS.gac_tr))
+    else:
+      self.gac_button_counter = 0
+    CS.gac_tr_cluster = clip(CS.gac_tr + 1, gac_min, gac_max)  # always 1 higher
     self.prev_gac_button = gac_button
-    cs_out.gapAdjustCruiseTr = self.get_sp_distance(CS.gac_tr, gac_max)
     return cs_out, CS
 
   def create_sp_events(self, CS, cs_out, events, main_enabled=False, allow_enable=True, enable_pressed=False,
@@ -562,11 +552,10 @@ class CarInterfaceBase(ABC):
 
   def sp_update_params(self, CS):
     self.experimental_mode = self.param_s.get_bool("ExperimentalMode")
-    CS.gac_tr = round(float(self.param_s.get("GapAdjustCruiseTr", encoding="utf8")))
+    CS.gac_tr = int(self.param_s.get("LongitudinalPersonality"))
     self._frame += 1
     if self._frame % 300 == 0:
       self._frame = 0
-      self.gac_mode = round(float(self.param_s.get("GapAdjustCruiseMode", encoding="utf8")))
       self.reverse_dm_cam = self.param_s.get_bool("ReverseDmCam")
     return CS
 
@@ -608,7 +597,8 @@ class CarStateBase(ABC):
     self.prev_mads_enabled = False
     self.control_initialized = False
     self.gap_dist_button = 0
-    self.gac_tr = round(float(self.param_s.get("GapAdjustCruiseTr", encoding="utf8")))
+    self.gac_tr = int(self.param_s.get("LongitudinalPersonality"))
+    self.gac_tr_cluster = clip(int(self.param_s.get("LongitudinalPersonality")), 1, 3)
 
     Q = [[0.0, 0.0], [0.0, 100.0]]
     R = 0.3
