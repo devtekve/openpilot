@@ -33,10 +33,16 @@ jobs:
       - name: Check if there are changes
         id: check-for-changes
         run: |
+          echo "Checking for changes..."
+          echo "Latest upstream commit hash: ${hash}"
+          echo "Last known upstream commit hash: $(cat latest-upstream-commit.txt)"
+
           if [[ ! -f latest-upstream-commit.txt || "${hash}" != "$(cat latest-upstream-commit.txt)" ]]; then
+            echo "Changes detected in upstream."
             echo "changes=true" >> $GITHUB_ENV
             echo "${hash}" > latest-upstream-commit.txt
           else
+            echo "No changes detected in upstream."
             echo "changes=false" >> $GITHUB_ENV
           fi
         shell: bash
