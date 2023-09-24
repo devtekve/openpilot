@@ -53,11 +53,9 @@ jobs:
         id: sync-and-commit
         if: ${{ env.changes == 'true' }}
         run: |
+          git add latest-upstream-commit.txt
+          git commit -m "Update latest commit hash"
           git remote add upstream https://github.com/sunnyhaibin/sunnypilot.git
           git fetch upstream
-          git fetch --all
-          git checkout dev-c3 || git checkout -b dev-c3
-          git reset --hard upstream/dev-c3
-          git add latest-upstream-commit.txt
-          git commit -m "Adding last commit hash..."
-          git push origin dev-c3 --force-with-lease
+          git merge upstream/dev-c3 --allow-unrelated-histories --strategy-option=theirs
+          git push origin dev-c3`
