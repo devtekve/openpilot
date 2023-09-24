@@ -58,4 +58,4 @@ jobs:
           git remote add upstream https://github.com/sunnyhaibin/sunnypilot.git
           git fetch upstream
           git merge upstream/dev-c3 --allow-unrelated-histories --strategy-option=theirs
-          git push origin dev-c3`
+          git push origin dev-c3
