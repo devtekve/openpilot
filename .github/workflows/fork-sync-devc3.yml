@@ -1,0 +1,63 @@
+name: Sync dev-c3 Branch
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # This will run the action every 30 minutes
+  workflow_dispatch:  #  This enables manual triggering
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for other instances of this workflow to conclude
+        uses: softprops/turnstyle@v1
+        with:
+          same-branch-only: 'true'
+          continue-after-seconds: 300
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+
+      - name: Get latest upstream commit hash
+        id: get-latest-upstream-commit-hash
+        run: |
+          echo "hash=$(git ls-remote https://github.com/sunnyhaibin/sunnypilot.git dev-c3 | awk '{print $1}')" >> $GITHUB_ENV
+
+      - name: Check if there are changes
+        id: check-for-changes
+        run: |
+          if [[ ! -f latest-upstream-commit.txt || "${hash}" != "$(cat latest-upstream-commit.txt)" ]]; then
+            echo "changes=true" >> $GITHUB_ENV
+            echo "${hash}" > latest-upstream-commit.txt
+          else
+            echo "changes=false" >> $GITHUB_ENV
+          fi
+        shell: bash
+      
+      - name: Get latest upstream commit message
+        id: get-latest-upstream-commit-message
+        run: |
+          git clone https://github.com/sunnyhaibin/sunnypilot.git
+          cd sunnypilot
+          git checkout dev-c3
+          echo "message=$(git log -1 --pretty=format:"%B")" >> $GITHUB_ENV
+
+      - name: Sync and commit changes
+        id: sync-and-commit
+        if: ${{ env.changes == 'true' }}
+        run: |
+          git remote add upstream https://github.com/sunnyhaibin/sunnypilot.git
+          git fetch upstream
+          git fetch --all
+          git checkout dev-c3 || git checkout -b dev-c3
+          git reset --hard upstream/dev-c3
+          git add latest-upstream-commit.txt
+          git commit -m "${{ env.message }}"
+          git push origin dev-c3 --force-with-lease
