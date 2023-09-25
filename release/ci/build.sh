@@ -29,4 +29,4 @@ docker compose -f ${SOURCE_DIR}/docker-compose.yml build
 docker compose -f ${SOURCE_DIR}/docker-compose.yml up
 
 # "Tagging"
-echo "#define COMMA_VERSION \"$VERSION-dev\"" > ${OUTPUT_DIR}/common/version.h
+sudo echo "#define COMMA_VERSION \"$VERSION-dev\"" > ${OUTPUT_DIR}/common/version.h

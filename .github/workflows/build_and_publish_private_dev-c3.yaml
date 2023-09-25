@@ -28,12 +28,55 @@ jobs:
           echo "Setting up REPO_URL environment variable..."
           echo "REPO_URL=${{ github.server_url }}/${{ github.repository }}.git" >> $GITHUB_ENV
           echo "REPO_URL has been set to: ${{ github.server_url }}/${{ github.repository }}.git"
+          echo "VERSION=$(date '+%Y.%m.%d')" >> $GITHUB_ENV
+          echo "SOURCE_DIR=$(git rev-parse --show-toplevel)" >> $GITHUB_ENV
+          echo "OUTPUT_DIR=${SOURCE_DIR}/output" >> $GITHUB_ENV
           echo "DONE"
 
       - name: Execute Scripts
         run: |
-          mkdir -p ./output
-          chmod 644 -R ./output
+          sudo mkdir -p ./output
+          sudo chmod 644 -R ./output
           chmod +x ./release/ci/build_and_publish.sh
           ./release/ci/build_and_publish.sh "dev-c3-test" "${REPO_URL}"
         shell: bash
+
+      - name: Building sunnypilot
+        run: |
+          echo $VERSION
+          echo $SOURCE_DIR
+          echo $OUTPUT_DIR
+
+          echo "Calling to build [${DIR}/build.sh ${SOURCE_DIR} ${OUTPUT_DIR} ${VERSION}]"
+          $DIR/build.sh "${SOURCE_DIR}" "${OUTPUT_DIR}" "${VERSION}"
+        shell: bash
+
+      - name: Ensuring proper permissions to built files
+        run: |
+          echo $OUTPUT_DIR
+
+          sudo chmod -R u+x $OUTPUT_DIR
+        shell: bash
+
+      - name: Publishing sunnypilot
+        run: |
+          if [ -z "$DEV_BRANCH" ]; then
+            DEV_BRANCH="dev-c3-test"
+          fi
+
+          if [ -z "$GIT_ORIGIN" ]; then
+            GIT_ORIGIN="git@github.com:devtekve/openpilot-og.git" #This is a default that should be changed
+            echo "No GIT_ORIGIN provided, we will use the default [${GIT_ORIGIN}]"
+          fi
+
+          echo ${VERSION}
+          echo ${SOURCE_DIR}
+          echo ${OUTPUT_DIR}
+          echo ${DEV_BRANCH}
+          echo ${REPO_URL}
+
+          echo "Calling to publish [${DIR}/publish.sh ${SOURCE_DIR} ${OUTPUT_DIR} ${DEV_BRANCH} ${VERSION} ${GIT_ORIGIN}]"
+          $DIR/publish.sh "${SOURCE_DIR}" "${OUTPUT_DIR}" "${DEV_BRANCH}" "${VERSION}" "${GIT_ORIGIN}"
+        shell: bash
+
+
