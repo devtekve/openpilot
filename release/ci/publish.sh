@@ -32,7 +32,7 @@ rm -rf .git # ensure cleaning
 git init
 # set git username/password
 #source /data/identity.sh
-git remote add origin git@github.com:devtekve/openpilot.git
+git remote add origin git@github.com:devtekve/openpilot-og.git
 git fetch origin $DEV_BRANCH || (git checkout -b $DEV_BRANCH && git commit --allow-empty -m "sunnypilot v$VERSION release" && git push -u origin $DEV_BRANCH)
 
 echo "[-] committing version $VERSION T=$SECONDS"
