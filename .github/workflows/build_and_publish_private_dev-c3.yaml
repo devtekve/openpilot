@@ -18,18 +18,19 @@ jobs:
         with:
           submodules: true
 
+      - name: Set up Git
+        run: |
+          sudo git config --global user.name 'GitHub Action'
+          sudo git config --global user.email 'action@github.com'
+
       - name: Set env
         run: |
           echo "Setting up REPO_URL environment variable..."
           echo "REPO_URL=${{ github.server_url }}/${{ github.repository }}.git" >> $GITHUB_ENV
           echo "REPO_URL has been set to: ${{ github.server_url }}/${{ github.repository }}.git"
 
-      - name: Set up Git
-        run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
-
       - name: Execute Scripts
         run: |
           sudo chmod +x ./release/ci/build_and_publish.sh
           sudo ./release/ci/build_and_publish.sh "dev-c3-test" "${REPO_URL}"
+        shell: bash

@@ -25,7 +25,7 @@ fi
 git submodule update --remote --init --recursive
 
 # Build
-#docker compose -f ${SOURCE_DIR}/docker-compose.yml build
+docker compose -f ${SOURCE_DIR}/docker-compose.yml build
 docker compose -f ${SOURCE_DIR}/docker-compose.yml up
 
 # "Tagging"
