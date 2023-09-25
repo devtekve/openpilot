@@ -44,7 +44,6 @@ jobs:
           echo $OUTPUT_DIR
           echo $CI_DIR
 
-
           mkdir -p ${OUTPUT_DIR}
           chmod -R u+x ${OUTPUT_DIR}
 
