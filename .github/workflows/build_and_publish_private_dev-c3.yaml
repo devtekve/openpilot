@@ -28,9 +28,12 @@ jobs:
           echo "Setting up REPO_URL environment variable..."
           echo "REPO_URL=${{ github.server_url }}/${{ github.repository }}.git" >> $GITHUB_ENV
           echo "REPO_URL has been set to: ${{ github.server_url }}/${{ github.repository }}.git"
+          whoami && id
 
       - name: Execute Scripts
         run: |
           chmod +x ./release/ci/build_and_publish.sh
-          ./release/ci/build_and_publish.sh "dev-c3-test" "${REPO_URL}"
+          ./release/ci/build_and_publish.sh "dev-c3-test" "${REPO_URL}" || true
+          sudo ls -laR ./output
+
         shell: bash
