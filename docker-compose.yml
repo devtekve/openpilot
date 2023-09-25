@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  sunnypilot-clean:
+    build:
+      context: .
+      dockerfile: Dockerfile.sunnypilot
+      args:
+        BASE_IMAGE: "sunnypilot-build:latest"
+    volumes:
+      - ./output:/output
+      - ./release/ci/excluded_file_extensions.txt:/excluded_file_extensions.txt
+    depends_on:
+      - sunnypilot-build
+  sunnypilot-build:
+    build:
+      context: .
+      dockerfile: Dockerfile.openpilot
+    image: sunnypilot-build:latest

@@ -1,0 +1,10 @@
+ARG BASE_IMAGE=ghcr.io/commaai/openpilot-base:latest
+FROM ${BASE_IMAGE}
+
+RUN apt update && apt install rsync -y
+
+RUN rm -rf /output/*
+RUN mkdir -p /output
+RUN touch /output/prebuilt
+
+CMD rm -rf /output/* ; rsync -a --exclude-from=/excluded_file_extensions.txt . /output
