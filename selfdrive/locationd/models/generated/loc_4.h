@@ -1,0 +1,55 @@
+#pragma once
+#include "rednose/helpers/common_ekf.h"
+extern "C" {
+void loc_4_update_4(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_9(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_10(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_6(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_20(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_7(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_21(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_13(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_14(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_33(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_16(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_15(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_34(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_update_17(double *in_x, double *in_P, double *in_z, double *in_R, double *in_ea);
+void loc_4_err_fun(double *nom_x, double *delta_x, double *out_2763417281371685655);
+void loc_4_inv_err_fun(double *nom_x, double *true_x, double *out_213192891306889849);
+void loc_4_H_mod_fun(double *state, double *out_8544884886792654470);
+void loc_4_f_fun(double *state, double dt, double *out_4774442647711196425);
+void loc_4_F_fun(double *state, double dt, double *out_2445088923809183521);
+void loc_4_h_4(double *state, double *unused, double *out_260371532536391942);
+void loc_4_H_4(double *state, double *unused, double *out_400786094423905906);
+void loc_4_h_9(double *state, double *unused, double *out_480972430969819975);
+void loc_4_H_9(double *state, double *unused, double *out_973806700538028749);
+void loc_4_h_10(double *state, double *unused, double *out_4349827445902671557);
+void loc_4_H_10(double *state, double *unused, double *out_7916572193677918948);
+void loc_4_h_6(double *state, double *sat_pos, double *out_1012859985449474994);
+void loc_4_H_6(double *state, double *sat_pos, double *out_3526260623949681631);
+void loc_4_h_20(double *state, double *sat_pos, double *out_5787818283590332775);
+void loc_4_H_20(double *state, double *sat_pos, double *out_2703189368492640396);
+void loc_4_h_7(double *state, double *sat_pos_vel, double *out_8708182408763783689);
+void loc_4_H_7(double *state, double *sat_pos_vel, double *out_2155252161076470778);
+void loc_4_h_21(double *state, double *sat_pos_vel, double *out_8708182408763783689);
+void loc_4_H_21(double *state, double *sat_pos_vel, double *out_2155252161076470778);
+void loc_4_h_13(double *state, double *unused, double *out_664966501599956907);
+void loc_4_H_13(double *state, double *unused, double *out_9184089328025816572);
+void loc_4_h_14(double *state, double *unused, double *out_480972430969819975);
+void loc_4_H_14(double *state, double *unused, double *out_973806700538028749);
+void loc_4_h_33(double *state, double *unused, double *out_8078485392807594867);
+void loc_4_H_33(double *state, double *unused, double *out_2659578461944494270);
+void loc_4_h_16(double *state, double *track_epos_sym, double *out_6688797538802490029);
+void loc_4_H_16(double *state, double *track_epos_sym, double *out_7572298608951551488);
+void loc_4_He_16(double *state, double *track_epos_sym, double *out_2971871725921514600);
+void loc_4_h_15(double *state, double *track_epos_sym, double *out_7442915702394003690);
+void loc_4_H_15(double *state, double *track_epos_sym, double *out_5025952951741676480);
+void loc_4_He_15(double *state, double *track_epos_sym, double *out_6894226379292811852);
+void loc_4_h_34(double *state, double *track_epos_sym, double *out_2300564761156836195);
+void loc_4_H_34(double *state, double *track_epos_sym, double *out_7610092969568666264);
+void loc_4_He_34(double *state, double *track_epos_sym, double *out_6512920641077340428);
+void loc_4_h_17(double *state, double *track_epos_sym, double *out_7442915702394003690);
+void loc_4_H_17(double *state, double *track_epos_sym, double *out_5025952951741676480);
+void loc_4_predict(double *in_x, double *in_P, double *in_Q, double dt);
+}
