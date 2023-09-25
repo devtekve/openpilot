@@ -56,6 +56,11 @@ jobs:
           echo $OUTPUT_DIR
 
           sudo chmod -R u+x $OUTPUT_DIR
+
+          ls -la $OUTPUT_DIR
+          sudo chmod -R a+rwx $OUTPUT_DIR
+          ls -la $OUTPUT_DIR
+
         shell: bash
 
       - name: Publishing sunnypilot
