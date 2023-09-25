@@ -28,6 +28,9 @@ if [ -z "$GIT_ORIGIN" ]; then
     exit 1
 fi
 
+# "Tagging"
+echo "#define COMMA_VERSION \"$VERSION-dev\"" > ${OUTPUT_DIR}/common/version.h
+
 ## set git identity
 #source $DIR/identity.sh
 #export GIT_SSH_COMMAND="ssh -i /data/gitkey"
