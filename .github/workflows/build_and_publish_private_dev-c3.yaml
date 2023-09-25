@@ -35,7 +35,6 @@ jobs:
           echo "SOURCE_DIR=${SOURCE_DIR}" >> $GITHUB_ENV
           echo "OUTPUT_DIR=${OUTPUT_DIR}" >> $GITHUB_ENV
           echo "CI_DIR=${CI_DIR}" >> $GITHUB_ENV
-          ./release/ci/build_and_publish.s
           echo "DONE"
 
       - name: Building sunnypilot
