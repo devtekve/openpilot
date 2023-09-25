@@ -26,8 +26,9 @@ jobs:
       - name: Set env
         run: |
           echo "Setting up REPO_URL environment variable..."
-          echo "REPO_URL=${{ github.server_url }}/${{ github.repository }}.git" >> $GITHUB_ENV
-          echo "REPO_URL has been set to: ${{ github.server_url }}/${{ github.repository }}.git"
+          REPO="github.com/${{ github.repository }}"
+          echo "REPO_URL=https://x-access-token:${GITHUB_TOKEN}@${REPO}.git" >> $GITHUB_ENV
+          echo "REPO_URL has been set to: https://x-access-token:${GITHUB_TOKEN}@${REPO}.git"
           echo "VERSION=$(date '+%Y.%m.%d')" >> $GITHUB_ENV
           export SOURCE_DIR=$(git rev-parse --show-toplevel)
           export OUTPUT_DIR=${SOURCE_DIR}/output
