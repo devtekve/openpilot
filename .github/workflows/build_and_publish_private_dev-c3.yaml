@@ -33,19 +33,14 @@ jobs:
           echo "OUTPUT_DIR=${SOURCE_DIR}/output" >> $GITHUB_ENV
           echo "DONE"
 
-      - name: Execute Scripts
-        run: |
-          sudo mkdir -p ./output
-          sudo chmod 644 -R ./output
-          chmod +x ./release/ci/build_and_publish.sh
-          ./release/ci/build_and_publish.sh "dev-c3-test" "${REPO_URL}"
-        shell: bash
-
       - name: Building sunnypilot
         run: |
           echo $VERSION
           echo $SOURCE_DIR
           echo $OUTPUT_DIR
+
+          sudo mkdir -p $$OUTPUT_DIR
+          sudo chmod -R u+x $OUTPUT_DIR
 
           echo "Calling to build [${DIR}/build.sh ${SOURCE_DIR} ${OUTPUT_DIR} ${VERSION}]"
           $DIR/build.sh "${SOURCE_DIR}" "${OUTPUT_DIR}" "${VERSION}"
