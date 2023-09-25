@@ -29,8 +29,10 @@ jobs:
           echo "REPO_URL=${{ github.server_url }}/${{ github.repository }}.git" >> $GITHUB_ENV
           echo "REPO_URL has been set to: ${{ github.server_url }}/${{ github.repository }}.git"
           echo "VERSION=$(date '+%Y.%m.%d')" >> $GITHUB_ENV
-          echo "SOURCE_DIR=$(git rev-parse --show-toplevel)" >> $GITHUB_ENV
-          echo "OUTPUT_DIR=${SOURCE_DIR}/output" >> $GITHUB_ENV
+          export SOURCE_DIR=$(git rev-parse --show-toplevel)
+          export OUTPUT_DIR=${SOURCE_DIR}/output
+          echo "SOURCE_DIR=${SOURCE_DIR}" >> $GITHUB_ENV
+          echo "OUTPUT_DIR=${OUTPUT_DIR}" >> $GITHUB_ENV
           echo "DONE"
 
       - name: Building sunnypilot
