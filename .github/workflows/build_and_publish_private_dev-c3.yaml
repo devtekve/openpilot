@@ -16,5 +16,5 @@ jobs:
 
       - name: Execute Scripts
         run: |
-          chmod +x ./build_and_publish.sh
+          chmod +x ./release/ci/build_and_publish.sh
           ./release/ci/build_and_publish.sh "dev-c3-test"
