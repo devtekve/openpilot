@@ -20,8 +20,8 @@ jobs:
 
       - name: Set up Git
         run: |
-          sudo git config --global user.name 'GitHub Action'
-          sudo git config --global user.email 'action@github.com'
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
 
       - name: Set env
         run: |
@@ -31,6 +31,6 @@ jobs:
 
       - name: Execute Scripts
         run: |
-          sudo chmod +x ./release/ci/build_and_publish.sh
-          sudo ./release/ci/build_and_publish.sh "dev-c3-test" "${REPO_URL}"
+          chmod +x ./release/ci/build_and_publish.sh
+          ./release/ci/build_and_publish.sh "dev-c3-test" "${REPO_URL}"
         shell: bash
