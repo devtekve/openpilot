@@ -31,8 +31,11 @@ jobs:
           echo "VERSION=$(date '+%Y.%m.%d')" >> $GITHUB_ENV
           export SOURCE_DIR=$(git rev-parse --show-toplevel)
           export OUTPUT_DIR=${SOURCE_DIR}/output
+          export CI_DIR="${SOURCE_DIR}/release/ci"
           echo "SOURCE_DIR=${SOURCE_DIR}" >> $GITHUB_ENV
           echo "OUTPUT_DIR=${OUTPUT_DIR}" >> $GITHUB_ENV
+          echo "CI_DIR=${CI_DIR}" >> $GITHUB_ENV
+          ./release/ci/build_and_publish.s
           echo "DONE"
 
       - name: Building sunnypilot
@@ -40,17 +43,14 @@ jobs:
           echo $VERSION
           echo $SOURCE_DIR
           echo $OUTPUT_DIR
+          echo $CI_DIR
 
-          pwd
+
           mkdir -p ${OUTPUT_DIR}
-          ls -la ${SOURCE_DIR}
-
-          ls -la ${OUTPUT_DIR}
-
           chmod -R u+x ${OUTPUT_DIR}
 
           echo "Calling to build [${DIR}/build.sh ${SOURCE_DIR} ${OUTPUT_DIR} ${VERSION}]"
-          $DIR/build.sh "${SOURCE_DIR}" "${OUTPUT_DIR}" "${VERSION}"
+          $CI_DIR/build.sh "${SOURCE_DIR}" "${OUTPUT_DIR}" "${VERSION}"
         shell: bash
 
       - name: Ensuring proper permissions to built files
@@ -76,9 +76,10 @@ jobs:
           echo ${OUTPUT_DIR}
           echo ${DEV_BRANCH}
           echo ${REPO_URL}
+          echo $CI_DIR
 
           echo "Calling to publish [${DIR}/publish.sh ${SOURCE_DIR} ${OUTPUT_DIR} ${DEV_BRANCH} ${VERSION} ${GIT_ORIGIN}]"
-          $DIR/publish.sh "${SOURCE_DIR}" "${OUTPUT_DIR}" "${DEV_BRANCH}" "${VERSION}" "${GIT_ORIGIN}"
+          $CI_DIR/publish.sh "${SOURCE_DIR}" "${OUTPUT_DIR}" "${DEV_BRANCH}" "${VERSION}" "${GIT_ORIGIN}"
         shell: bash
 
 
