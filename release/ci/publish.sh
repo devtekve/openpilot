@@ -10,6 +10,7 @@ SOURCE_DIR=$1
 OUTPUT_DIR=$2
 DEV_BRANCH=$3
 VERSION=$4
+GIT_ORIGIN=$5
 
 # Check parameters
 if [ -z "$SOURCE_DIR" ] || [ -z "$OUTPUT_DIR" ]; then
@@ -19,6 +20,11 @@ fi
 
 if [ -z "$DEV_BRANCH" ] || [ -z "$VERSION" ]; then
     echo "Error: No dev branch or version provided."
+    exit 1
+fi
+
+if [ -z "$GIT_ORIGIN" ]; then
+    echo "Error: No GIT_ORIGIN provided"
     exit 1
 fi
 
@@ -32,7 +38,7 @@ rm -rf .git # ensure cleaning
 git init
 # set git username/password
 #source /data/identity.sh
-git remote add origin git@github.com:devtekve/openpilot-og.git
+git remote add origin $GIT_ORIGIN
 git fetch origin $DEV_BRANCH || (git checkout -b $DEV_BRANCH && git commit --allow-empty -m "sunnypilot v$VERSION release" && git push -u origin $DEV_BRANCH)
 
 echo "[-] committing version $VERSION T=$SECONDS"
