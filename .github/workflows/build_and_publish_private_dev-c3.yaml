@@ -41,8 +41,13 @@ jobs:
           echo $SOURCE_DIR
           echo $OUTPUT_DIR
 
-          sudo mkdir -p $$OUTPUT_DIR
-          sudo chmod -R u+x $OUTPUT_DIR
+          pwd
+          ls -la $SOURCE_DIR
+
+          ls -la $OUTPUT_DIR
+
+          mkdir -p $$OUTPUT_DIR
+          chmod -R u+x $OUTPUT_DIR
 
           echo "Calling to build [${DIR}/build.sh ${SOURCE_DIR} ${OUTPUT_DIR} ${VERSION}]"
           $DIR/build.sh "${SOURCE_DIR}" "${OUTPUT_DIR}" "${VERSION}"
