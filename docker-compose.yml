@@ -2,7 +2,6 @@ version: '3'
 
 services:
   sunnypilot-clean:
-    user: "${UID:-0}:${GID:-0}"
     build:
       context: .
       dockerfile: Dockerfile.sunnypilot
@@ -14,7 +13,6 @@ services:
     depends_on:
       - sunnypilot-build
   sunnypilot-build:
-    user: "${UID:-0}:${GID:-0}"
     build:
       context: .
       dockerfile: Dockerfile.openpilot
