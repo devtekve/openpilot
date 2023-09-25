@@ -69,11 +69,6 @@ jobs:
             DEV_BRANCH="dev-c3-test"
           fi
 
-          if [ -z "$GIT_ORIGIN" ]; then
-            GIT_ORIGIN="git@github.com:devtekve/openpilot-og.git" #This is a default that should be changed
-            echo "No GIT_ORIGIN provided, we will use the default [${GIT_ORIGIN}]"
-          fi
-
           echo ${VERSION}
           echo ${SOURCE_DIR}
           echo ${OUTPUT_DIR}
@@ -81,8 +76,8 @@ jobs:
           echo ${REPO_URL}
           echo $CI_DIR
 
-          echo "Calling to publish [${DIR}/publish.sh ${SOURCE_DIR} ${OUTPUT_DIR} ${DEV_BRANCH} ${VERSION} ${GIT_ORIGIN}]"
-          $CI_DIR/publish.sh "${SOURCE_DIR}" "${OUTPUT_DIR}" "${DEV_BRANCH}" "${VERSION}" "${GIT_ORIGIN}"
+          echo "Calling to publish [${DIR}/publish.sh ${SOURCE_DIR} ${OUTPUT_DIR} ${DEV_BRANCH} ${VERSION} ${REPO_URL}]"
+          $CI_DIR/publish.sh "${SOURCE_DIR}" "${OUTPUT_DIR}" "${DEV_BRANCH}" "${VERSION}" "${REPO_URL}"
         shell: bash
 
 
